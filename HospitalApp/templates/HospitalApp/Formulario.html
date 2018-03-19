@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+{% block head %}
+    <title>Reportes</title>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
+{% endblock %}
+</head>
+<body>
+{% block body %}
+    <div class="container">
+        <div class="col-3">
+            <div class="container-fluid">
+
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                        Nombre
+                    </div>
+                    <div class="col-sm">
+                        Apellido
+                    </div>
+                    <div class="col-sm">
+                        Cama
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>

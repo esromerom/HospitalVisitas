@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+{% block head %}
+    <title>Reportes</title>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
+{% endblock %}
+</head>
+<body>
+{% block body %}
+    <div class="container">
+        <div class="col-3">
+            <div class="container-fluid">
+
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm">
+                      One of three columns
+                    </div>
+                    <div class="col-sm">
+                      One of three columns
+                    </div>
+                    <div class="col-sm">
+                      One of three columns
+                    </div>
+                </div>
+                <button class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
+                    Refrescar
+                </button>
+                <a href="#" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">Link</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+</body>
+</html>
