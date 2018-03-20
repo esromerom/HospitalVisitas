@@ -1,5 +1,6 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm
+from django.urls import resolve
 # Create your views here.
 
 def reportes(request):
@@ -24,8 +25,49 @@ def servicios(request):
     return render(request, 'HospitalApp/Servicios.html')
 
 def registro(request):
-    if request == 'POST':
-        form = UserCreationForm(request)
-    # return render(request, 'HospitalApp/RegistroOpera.html')
-# def login(request):
-#     return render(request, 'HospitalApp/login.html')
+    current_url = resolve(request.path_info).url_name
+    print (current_url)
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/Hospital/login')
+            # return render(request, 'HospitalApp/RegistroOpera.html')
+            # def login(request):
+            #     return render(request, 'HospitalApp/login.html')
+    else:
+        form = UserCreationForm()
+        args = {'form': form}
+        return render(request, 'HospitalApp/RegistroOpera.html', args)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
