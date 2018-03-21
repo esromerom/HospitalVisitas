@@ -83,32 +83,27 @@ WSGI_APPLICATION = 'Hospital.wsgi.application'
 # }
 
 # local mysql
-DATABASES = {
-    'default': {
-      #  'ENGINE': 'django.db.backends.mysql',
-      #  'NAME': 'hospital',
-      #  'USER': 'hospital',
-       # 'PASSWORD': 'Acceso2018*',
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hospital',
-        'USER': 'hospital',
-        'PASSWORD': 'Acceso2018*',
-        'HOST': '192.168.0.7',
-        'PORT': '3306',
-    }
-}
-
-# # Remote 192.168.0.10 mysqlserver
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
 #         'NAME': 'hospital',
-#         'USER': 'hospital',
-#         'PASSWORD': 'Acceso2018*',
-#         'HOST': '192.168.0.10',
-#         'PORT': '',
+#         'USER': 'root',
+#         'PASSWORD': 'Acceso2018',
 #     }
 # }
+
+# Remote 192.168.0.10 mysqlserver
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hospital',
+        'USER': 'hospital',
+        'PASSWORD': 'Acceso2018*',
+        'HOST': '192.168.0.10',
+        'PORT': '3306',
+    }
+}
 
 
 # Password validation

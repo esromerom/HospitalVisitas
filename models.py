@@ -8,6 +8,17 @@
 from django.db import models
 
 
+class HospitalappPerfiloperario(models.Model):
+    empresa = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=50)
+    telefono = models.BigIntegerField()
+    operario = models.ForeignKey('AuthUser', models.DO_NOTHING, unique=True)
+
+    class Meta:
+        managed = False
+
+
+
 class Asistencia(models.Model):
     idvisitante = models.AutoField(primary_key=True)
     identificacion = models.IntegerField()
@@ -23,19 +34,6 @@ class Asistencia(models.Model):
     class Meta:
         managed = False
         db_table = 'asistencia'
-
-
-
-class perfilOperario(models.Model):
-    empresa = models.CharField(max_length=50)
-    nombre = models.CharField(max_length=50)
-    telefono = models.BigIntegerField()
-    operario = models.ForeignKey('AuthUser', models.DO_NOTHING, unique=True)
-
-    class Meta:
-        managed = False
-        db_table = 'perfiloperario'
-
 
 
 class AuthGroup(models.Model):
@@ -109,7 +107,7 @@ class Cama(models.Model):
     nombre = models.CharField(max_length=45)
     idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
     iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
-    ocupacion = models.PositiveIntegerField()
+    ocupacion = models.PositiveIntegerField(default=0)
     disponibilidad = models.PositiveIntegerField()
 
     class Meta:
@@ -180,6 +178,7 @@ class Habitacion(models.Model):
     piso = models.CharField(max_length=45)
     idtorre = models.ForeignKey('Torre', models.DO_NOTHING, db_column='idtorre')
     ncamas = models.PositiveIntegerField()
+
     class Meta:
         managed = False
         db_table = 'habitacion'
@@ -228,6 +227,3 @@ class Visitante(models.Model):
     class Meta:
         managed = False
         db_table = 'visitante'
-
-
-
