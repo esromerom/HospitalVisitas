@@ -1,6 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import resolve
+from HospitalApp.formularios import OperarioForm
 # Create your views here.
 
 def reportes(request):
@@ -26,10 +27,9 @@ def servicios(request):
 
 def registro(request):
     current_url = resolve(request.path_info).url_name
-    print (current_url)
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = OperarioForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/Hospital/login')
@@ -37,10 +37,12 @@ def registro(request):
             # def login(request):
             #     return render(request, 'HospitalApp/login.html')
     else:
-        form = UserCreationForm()
+        form = OperarioForm()
         args = {'form': form}
         return render(request, 'HospitalApp/RegistroOpera.html', args)
 
+def visitas(request):
+    return render(request, 'HospitalApp/RegistroVisitas.html')
 
 
 
