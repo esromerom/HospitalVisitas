@@ -5,6 +5,7 @@ from HospitalApp.views import Homeview
 urlpatterns = [
     url(r'^Servicios/$', views.servicios),
     url(r'^Servicios/Reportes/$', views.reportes),
+    # url(r'^Servicios/Admin/$', views.visitas),
     url(r'^home/$', views.home),
     url(r'^$', views.home),
     url(r'^login/$', login, {'template_name': 'HospitalApp/login.html'}),
