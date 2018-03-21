@@ -21,5 +21,4 @@ urlpatterns = [
     path('', Principal_views.redireccion_login),
     path('admin/', admin.site.urls),
     path('Hospital/', include('HospitalApp.urls')),
-
 ]

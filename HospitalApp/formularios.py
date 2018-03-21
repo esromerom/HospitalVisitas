@@ -27,7 +27,8 @@ class OperarioForm(UserCreationForm):
 
         return user
 
-
+class ConsultaForm():
+    pass
 
 
 

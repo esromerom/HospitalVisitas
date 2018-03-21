@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import resolve
 from HospitalApp.formularios import OperarioForm
+from django.views.generic import TemplateView
 # Create your views here.
 
 def reportes(request):
@@ -44,8 +45,14 @@ def registro(request):
 def visitas(request):
     return render(request, 'HospitalApp/RegistroVisitas.html')
 
+class reportes(TemplateView):
+    template_name = "templates/base.html"
 
+    def get(self, request, *args, **kwargs):
+        pass
 
+    def post(self, request):
+        pass
 
 
 

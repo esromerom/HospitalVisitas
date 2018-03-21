@@ -23,9 +23,7 @@ class perfilOperario(models.Model):
     nombre = models.CharField(max_length=50, default='')
     telefono = models.BigIntegerField(default=0)
     class Meta:
+        managed = False
         db_table = 'perfiloperario'
 
-#
-# class Visitantes():
-#      = models.
 

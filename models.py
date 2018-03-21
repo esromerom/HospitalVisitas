@@ -16,7 +16,7 @@ class HospitalappPerfiloperario(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'perfiloperario'
+
 
 
 class Asistencia(models.Model):
