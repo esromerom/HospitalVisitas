@@ -3,22 +3,23 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import resolve
 from HospitalApp.formularios import OperarioForm
 from django.views.generic import TemplateView
+from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Asistencia
 # Create your views here.
 
-def reportes(request):
-    casos = ['VisArea', 'xID', 'xDia', 'xMes', 'xIntervalo', 'xNombre', 'xServicio', 'xCierre']
-    Texto = ['Reporte de Número de Visitantes por Area',
-             'Reporte de Visitante por ID',
-             'Reporte de visitantes por Día',
-             'Reporte de Visitantes por mes',
-             'Reporte de Visitantes por Intervalos de Tiempo',
-             'Reporte de Visitantes por Nombre',
-             'Reporte de Visitantes por Servicio'
-             'Reporte de Visitantes al cierre']
-    reportesCasos = {}
-    # reportesCasos.keys(casos)
-    # reportesCasos.values(Texto)
-    return render(request, 'HospitalApp/Reporte.html')
+# def reportes(request):
+#     casos = ['VisArea', 'xID', 'xDia', 'xMes', 'xIntervalo', 'xNombre', 'xServicio', 'xCierre']
+#     Texto = ['Reporte de Número de Visitantes por Area',
+#              'Reporte de Visitante por ID',
+#              'Reporte de visitantes por Día',
+#              'Reporte de Visitantes por mes',
+#              'Reporte de Visitantes por Intervalos de Tiempo',
+#              'Reporte de Visitantes por Nombre',
+#              'Reporte de Visitantes por Servicio'
+#              'Reporte de Visitantes al cierre']
+#     reportesCasos = {}
+#     # reportesCasos.keys(casos)
+#     # reportesCasos.values(Texto)
+#     return render(request, 'HospitalApp/Reporte.html')
 
 def home(request):
     return render(request, 'HospitalApp/homeHospital.html')
@@ -46,10 +47,14 @@ def visitas(request):
     return render(request, 'HospitalApp/RegistroVisitas.html')
 
 class reportes(TemplateView):
-    template_name = "templates/base.html"
+    template_name = "HospitalApp/Reporte.html"
 
-    def get(self, request, *args, **kwargs):
-        pass
+    def get(self, request):
+        camas = Cama.objects.filter(ocupacion__gt=0)
+        dependencias = Dependencia.objects.all()
+        torres = Torre.nombre
+        args = {'camas': camas, 'dependencias': dependencias, 'torres':torres}
+        return render(request, self.template_name, args)
 
     def post(self, request):
         pass
