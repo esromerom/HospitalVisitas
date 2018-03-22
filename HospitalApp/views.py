@@ -2,6 +2,8 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import resolve
 from django.views.generic import TemplateView
+from django.views.generic import TemplateView
+from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Asistencia
 from HospitalApp.forms import HomeForm
 from HospitalApp.forms import Torres
 from HospitalApp.forms import Habitaciones
@@ -109,10 +111,9 @@ def servicios(request):
 
 def registro(request):
     current_url = resolve(request.path_info).url_name
-    print (current_url)
 
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = OperarioForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('/Hospital/login')
@@ -120,6 +121,49 @@ def registro(request):
             # def login(request):
             #     return render(request, 'HospitalApp/login.html')
     else:
-        form = UserCreationForm()
+        form = OperarioForm()
         args = {'form': form}
         return render(request, 'HospitalApp/RegistroOpera.html', args)
+
+def visitas(request):
+    return render(request, 'HospitalApp/RegistroVisitas.html')
+
+class reportes(TemplateView):
+    template_name = "HospitalApp/Reporte.html"
+
+    def get(self, request):
+        camas = Cama.objects.filter(ocupacion__gt=0)
+        dependencias = Dependencia.objects.all()
+        torres = Torre.nombre
+        args = {'camas': camas, 'dependencias': dependencias, 'torres':torres}
+        return render(request, self.template_name, args)
+
+    def post(self, request):
+        pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

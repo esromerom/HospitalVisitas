@@ -1,14 +1,11 @@
 {% extends "base.html" %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
+
 {% block head %}
     <title>Reportes</title>
 {% load static %}
     <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
 {% endblock %}
-</head>
-<body>
+
 {% block body %}
     <div class="container">
         <div class="col-3">
@@ -18,17 +15,37 @@
         </div>
         <div class="col-9">
             <div class="container">
+
                 <div class="row">
                     <div class="col-sm">
-                      One of three columns
+                      Nombre de la Habitación
                     </div>
                     <div class="col-sm">
-                      One of three columns
+                      Disponible
                     </div>
                     <div class="col-sm">
-                      One of three columns
+                      Ocupación
                     </div>
                 </div>
+                {% for cama in camas %}
+                        <div class="row">
+
+                            <div class="col-sm">
+                                {{ cama.iddependencia }}
+                              {{ cama.nombre }}
+                            </div>
+                            <div class="col-sm">
+                              {{ cama.disponibilidad }}
+                            </div>
+                            <div class="col-sm">
+                              {{ cama.ocupacion }}
+                            </div>
+                            <div class="col-sm">
+                              {{ dependencias.iddependencia|cama.dependencia }}
+                            </div>
+                        </div>
+
+                {% endfor %}
                 <button class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
                     Refrescar
                 </button>
@@ -37,5 +54,3 @@
         </div>
     </div>
 {% endblock %}
-</body>
-</html>
