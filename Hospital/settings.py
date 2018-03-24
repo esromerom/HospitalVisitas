@@ -101,7 +101,7 @@ DATABASES = {
         'NAME': 'hospital',
         'USER': 'hospital',
         'PASSWORD': 'Acceso2018*',
-        'HOST': '192.168.0.10',
+        'HOST': '192.168.0.200',
         'PORT': '3306',
     }
 }

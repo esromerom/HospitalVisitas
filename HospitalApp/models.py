@@ -98,19 +98,6 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
-class Cama(models.Model):
-    idcama = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=45)
-    idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
-    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
-    ocupacion = models.PositiveIntegerField()
-    disponibilidad = models.PositiveIntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'cama'
-
-
 class Dependencia(models.Model):
     iddependencia = models.AutoField(primary_key=True)
     nombres = models.CharField(max_length=45)
@@ -122,6 +109,19 @@ class Dependencia(models.Model):
     class Meta:
         managed = False
         db_table = 'dependencia'
+
+
+class Cama(models.Model):
+    idcama = models.AutoField(primary_key=True)
+    nombre = models.CharField(verbose_name='Nombre Cama',max_length=45)
+    idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
+    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
+    ocupacion = models.PositiveIntegerField(verbose_name='Ocupación')
+    disponibilidad = models.PositiveIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'cama'
 
 
 class DjangoAdminLog(models.Model):
@@ -226,7 +226,7 @@ class Torre(models.Model):
 
 class Visitante(models.Model):
     idvisitante = models.IntegerField(primary_key=True)
-    nombre = models.CharField(max_length=45)
+    nombre = models.CharField(verbose_name='Visitante',max_length=45)
     idcama = models.ForeignKey(Cama, models.DO_NOTHING, db_column='idcama')
     iddependencia = models.ForeignKey(Dependencia, models.DO_NOTHING, db_column='iddependencia')
     nummenores = models.PositiveIntegerField(db_column='NumMenores', blank=True, null=True)  # Field name made lowercase.

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block head %}
     <title>Reportes</title>
 {% load static %}
@@ -14,38 +13,46 @@
             </div>
         </div>
         <div class="col-9">
-            {% if total > 0 %}
+            {% if totalCamas > 0 %}
                 {% load django_tables2 %}
+{#                {% querystring '_export'='csv' %}home#}
+                <div class="table-container" >
+
                 {% render_table tabla %}
-                <h4>Total de visitantes: {{ total }}</h4>
+
+                </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-5">
+                            <h6>Total de visitantes dentro: {{ totalVisitantes }}. </h6>
+                            <h6>Total de camas con visitantes: {{ totalCamas }}. </h6>
+                        </div>
+                        <div class="col-4">
+                            {% for format in tabla.export_formats %}
+                            <><a class=select2-container--focus href="{% querystring '_export'=format %}" >
+                                Exportar a archivo <code>.{{ format }}</code>
+                            </a></>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <p> </p>
             {% else %}
-                <h2>No aparecen registrados Visitantes dentro del hospital.</h2>
+                <p> </p>
+                <h2 style="color: darkslategrey">No aparecen registrados Visitantes dentro del hospital.</h2>
+                <p> </p>
             {% endif %}
-{#                {% for cama in camas %}#}
-{#                        <div class="row">#}
-{#                            <div class="col-sm">#}
-{#                                {{ cama.nombre }}#}
-{#                            </div>#}
-{#                            <div class="col-sm">#}
-{#                                {{ cama.disponibilidad }}#}
-{#                            </div>#}
-{#                            <div class="col-sm">#}
-{#                                {{ cama.ocupacion }}#}
-{#                            </div>#}
-{#                            <div class="col-sm">#}
-{#                                {{ cama.iddependencia.nombres }}#}
-{#                            </div>#}
-{#                            <div class="col-sm">#}
-{#                                {{ cama.idhabitacion.idtorre.nombre}}#}
-{#                            </div>#}
-{##}
-{#                        </div>#}
-{##}
-{#                {% endfor %}#}
-                <button class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
-                    Refrescar
-                </button>
-                <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">Link</a>
+
+                <div class="table-container">
+                    <button  class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
+                        Refrescar
+                    </button>
+                    <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">
+                        Atrás
+                    </a>
+                </div>
+
+
             </div>
         </div>
     </div>

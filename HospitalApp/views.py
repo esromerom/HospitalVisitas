@@ -2,18 +2,19 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import resolve
 from django.views.generic import TemplateView
-from django.views.generic import TemplateView
-from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Asistencia
 from HospitalApp.forms import HomeForm
 from HospitalApp.forms import Torres
 from HospitalApp.forms import Habitaciones
 from HospitalApp.forms import Camas
-from HospitalApp.models import Cama
+from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
 from django.shortcuts import render, redirect
 from django.forms import forms
 from HospitalApp.forms import ReporteOcupacion
 from HospitalApp.tablas import TablaOcupacion
-
+from django_tables2 import RequestConfig
+from django_tables2.export.views import ExportMixin
+from django_tables2.export.export import TableExport
+from datetime import datetime
 
 # Create your views here.
 
@@ -33,6 +34,7 @@ class Homeview(TemplateView):
             return redirect('formulario')
         args = {'form': form, 'text': text}
         return render(request, self.template_name, args)
+
 
 class TorreView(TemplateView):
     template_name = 'HospitalApp/FormularioTorres.html'
@@ -123,14 +125,50 @@ def visitas(request):
     return render(request, 'HospitalApp/RegistroVisitas.html')
 
 
-class Ocupacion(TemplateView):
+class ReporteOcupacion(ExportMixin, TemplateView):
     template_name = "HospitalApp/ReporteOcupacion.html"
     def get(self, request):
         forms = ReporteOcupacion
+        totalCamas = Cama.objects.filter(ocupacion__gt=0).count()
+        visitantes_adentro = Asistencia.objects.filter(estado='E')
+
+        totalVisitantes = len(visitantes_adentro)
+        tabla = TablaOcupacion(visitantes_adentro.values('identificacion__idcama__nombre',
+                                                         'identificacion__iddependencia__nombres',
+                                                         'identificacion__idcama__ocupacion',
+                                                         'identificacion__nombre',
+                                                         'identificacion__asistencia__numeromenores'))
+        config = RequestConfig(request).configure(tabla)
+        export_format = request.GET.get('_export', 'CSV')
+        if TableExport.is_valid_format(export_format):
+            ahora = datetime.now()
+            fecha = ahora.strftime("%d-%M-%Y")
+            exporter = TableExport(export_format, tabla)
+            return exporter.response('Visitantes al cierre '+fecha+'.{}'.format(export_format))
+        args = {'tabla': tabla, 'forms': forms,
+                'totalCamas': totalCamas,
+                'totalVisitantes': totalVisitantes,
+                }
+
+        return render(request, self.template_name, args)
+
+    def post(self, request):
+        pass
+
+
+class ReporteVisitantes(TemplateView):
+    template_name = "HospitalApp/ReporteOcupacion.html"
+
+    def get(self, request):
+        forms = ReporteOcupacion
         camas = Cama.objects.filter(ocupacion__gt=0)
-        total = len(camas)
-        tabla = TablaOcupacion(camas)
-        args = {'camas': camas, 'tabla': tabla, 'forms': forms, 'total': total}
+        totalCamas = len(camas)
+        totalVisitantes = sum(Cama.objects.filter(ocupacion__gt=0).values_list('ocupacion', flat=True))
+
+        tabla = TablaOcupacion(camas.values('nombre', 'iddependencia__nombres', 'ocupacion'))
+        args = {'camas': camas, 'tabla': tabla, 'forms': forms,
+                'totalCamas': totalCamas, 'totalVisitantes': totalVisitantes}
+
         return render(request, self.template_name, args)
 
     def post(self, request):

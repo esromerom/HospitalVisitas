@@ -1,6 +1,6 @@
 from django.contrib import admin
-# from HospitalApp.models import perfilOperario
+from HospitalApp.models import Perfiloperario
 
 # Register your models here.
 
-# admin.site.register(perfilOperario)
+admin.site.register(Perfiloperario)

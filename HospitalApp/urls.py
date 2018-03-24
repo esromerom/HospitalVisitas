@@ -21,6 +21,6 @@ urlpatterns = [
     url(r'^Servicios/admin/dependencias$', Homeview.as_view(), name='formulario'),
     url(r'^Servicios/admin/$', views.admin, name='admin'),
     url(r'^registro_operario/$', views.registro, name='registro'),
-    url(r'^Servicios/Reportes/Ocupacion$', views.Ocupacion.as_view(), name='Reportes'),
-    url(r'^Servicios/Reportes/Visitantes$', views.Ocupacion.as_view(), name='Reportes'),
+    url(r'^Servicios/Reportes/Ocupacion$', views.ReporteOcupacion.as_view(), name='Reportes'),
+    url(r'^Servicios/Reportes/Visitantes$', views.ReporteOcupacion.as_view(), name='Reportes'),
 ]
