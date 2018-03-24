@@ -14,10 +14,15 @@
             </div>
         </div>
         <div class="col-9">
-            {% if total > 0 %}
+            {% if totalCamas > 0 %}
+                <div class="table-container">
                 {% load django_tables2 %}
                 {% render_table tabla %}
-                <h4>Total de visitantes: {{ total }}</h4>
+
+                </div>
+                <h6>Total de visitantes dentro: {{ totalVisitantes }}. </h6>
+                <h6>Total de camas con visitantes: {{ totalCamas }}. </h6>
+
             {% else %}
                 <h2>No aparecen registrados Visitantes dentro del hospital.</h2>
             {% endif %}

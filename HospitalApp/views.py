@@ -8,11 +8,12 @@ from HospitalApp.forms import HomeForm
 from HospitalApp.forms import Torres
 from HospitalApp.forms import Habitaciones
 from HospitalApp.forms import Camas
-from HospitalApp.models import Cama
+from HospitalApp.models import Cama, Dependencia, Habitacion, Torre
 from django.shortcuts import render, redirect
 from django.forms import forms
 from HospitalApp.forms import ReporteOcupacion
 from HospitalApp.tablas import TablaOcupacion
+from django_tables2 import RequestConfig
 
 
 # Create your views here.
@@ -128,9 +129,13 @@ class Ocupacion(TemplateView):
     def get(self, request):
         forms = ReporteOcupacion
         camas = Cama.objects.filter(ocupacion__gt=0)
-        total = len(camas)
-        tabla = TablaOcupacion(camas)
-        args = {'camas': camas, 'tabla': tabla, 'forms': forms, 'total': total}
+        totalCamas = len(camas)
+        totalVisitantes = sum(Cama.objects.filter(ocupacion__gt=0).values_list('ocupacion',flat=True))
+
+        tabla = TablaOcupacion(camas.values('nombre', 'iddependencia__nombres', 'ocupacion'))
+        args = {'camas': camas, 'tabla': tabla, 'forms': forms,
+                'totalCamas': totalCamas, 'totalVisitantes': totalVisitantes}
+
         return render(request, self.template_name, args)
 
     def post(self, request):

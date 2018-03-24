@@ -97,23 +97,9 @@ class AuthUserUserPermissions(models.Model):
         db_table = 'auth_user_user_permissions'
         unique_together = (('user', 'permission'),)
 
-
-class Cama(models.Model):
-    idcama = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=45)
-    idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
-    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
-    ocupacion = models.PositiveIntegerField()
-    disponibilidad = models.PositiveIntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'cama'
-
-
 class Dependencia(models.Model):
     iddependencia = models.AutoField(primary_key=True)
-    nombres = models.CharField(max_length=45)
+    nombres = models.CharField(verbose_name='Dependencia',max_length=45)
     hora_inicio = models.TimeField(blank=True, null=True)
     hora_fin = models.TimeField(blank=True, null=True)
     cupo = models.PositiveIntegerField(blank=True, null=True)
@@ -122,6 +108,19 @@ class Dependencia(models.Model):
     class Meta:
         managed = False
         db_table = 'dependencia'
+
+
+class Cama(models.Model):
+    idcama = models.AutoField(primary_key=True)
+    nombre = models.CharField(verbose_name='Nombre Cama',max_length=45)
+    idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
+    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
+    ocupacion = models.PositiveIntegerField(verbose_name='Ocupación')
+    disponibilidad = models.PositiveIntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'cama'
 
 
 class DjangoAdminLog(models.Model):
