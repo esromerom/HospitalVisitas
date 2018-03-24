@@ -10,6 +10,9 @@ from HospitalApp.forms import Habitaciones
 from HospitalApp.forms import Camas
 from HospitalApp.models import Cama
 from django.shortcuts import render, redirect
+from django.forms import forms
+from HospitalApp.forms import ReporteOcupacion
+from HospitalApp.tablas import TablaOcupacion
 
 
 # Create your views here.
@@ -48,8 +51,10 @@ class TorreView(TemplateView):
         args = {'form':form, 'text': text}
         return render(request, self.template_name, args)
 
+
 class HabitacionView(TemplateView):
     template_name = 'HospitalApp/FormularioHabitaciones.html'
+
     def get(self, request):
         form = Habitaciones
         return render(request, self.template_name,{'form': form})
@@ -62,6 +67,7 @@ class HabitacionView(TemplateView):
             return  redirect('formulariohabitacion')
         args = {'form':form, 'text': text}
         return render(request, self.template_name, args)
+
 
 class CamaView(TemplateView):
     template_name = 'HospitalApp/FormularioCamas.html'
@@ -84,25 +90,12 @@ class CamaView(TemplateView):
         return render(request, self.template_name, args)
 
 
-
-def reportes(request):
-    casos = ['VisArea', 'xID', 'xDia', 'xMes', 'xIntervalo', 'xNombre', 'xServicio', 'xCierre']
-    Texto = ['Reporte de Número de Visitantes por Area',
-             'Reporte de Visitante por ID',
-             'Reporte de visitantes por Día',
-             'Reporte de Visitantes por mes',
-             'Reporte de Visitantes por Intervalos de Tiempo',
-             'Reporte de Visitantes por Nombre',
-             'Reporte de Visitantes por Servicio'
-             'Reporte de Visitantes al cierre']
-    reportesCasos = {}
-    # reportesCasos.keys(casos)
-    # reportesCasos.values(Texto)
-    return render(request, 'HospitalApp/Reporte.html')
-
-
 def home(request):
     return render(request, 'HospitalApp/homeHospital.html')
+
+
+def admin(request):
+    return render(request, 'HospitalApp/menuFormularios.html')
 
 
 def servicios(request):
@@ -125,45 +118,23 @@ def registro(request):
         args = {'form': form}
         return render(request, 'HospitalApp/RegistroOpera.html', args)
 
+
 def visitas(request):
     return render(request, 'HospitalApp/RegistroVisitas.html')
 
-class reportes(TemplateView):
-    template_name = "HospitalApp/Reporte.html"
 
+class Ocupacion(TemplateView):
+    template_name = "HospitalApp/ReporteOcupacion.html"
     def get(self, request):
+        forms = ReporteOcupacion
         camas = Cama.objects.filter(ocupacion__gt=0)
-        dependencias = Dependencia.objects.all()
-        torres = Torre.nombre
-        args = {'camas': camas, 'dependencias': dependencias, 'torres':torres}
+        total = len(camas)
+        tabla = TablaOcupacion(camas)
+        args = {'camas': camas, 'tabla': tabla, 'forms': forms, 'total': total}
         return render(request, self.template_name, args)
 
     def post(self, request):
         pass
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def menuReportes(request):
+    return render(request, 'HospitalApp/menuReportes.html')
