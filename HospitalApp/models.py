@@ -1,11 +1,18 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
-# Feel free to rename the models, but don't rename db_table values or field names.
+"""A model is the single, definitive source of information
+about your data. It contains the essential fields and behaviors
+of the data you’re storing. Generally, each model maps to a single
+database table.
+
+The basics:
+
+- Each model is a Python class that subclasses django.db.models.Model.
+- Each attribute of the model represents a database field.
+- With all of this, Django gives you an automatically-generated
+database-access API; see Making queries."""
+
 from django.db import models
+from django.contrib.auth.models import User
+# Esa clas User es la que conecta a la tabla de auth_user
 
 
 class Asistencia(models.Model):
@@ -96,8 +103,8 @@ class Cama(models.Model):
     nombre = models.CharField(max_length=45)
     idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
     iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
-    ocupacion = models.PositiveIntegerField(blank=True, null=True)
-    disponibilidad = models.PositiveIntegerField(blank=True, null=True)
+    ocupacion = models.PositiveIntegerField()
+    disponibilidad = models.PositiveIntegerField()
 
     class Meta:
         managed = False
@@ -228,3 +235,6 @@ class Visitante(models.Model):
     class Meta:
         managed = False
         db_table = 'visitante'
+
+
+
