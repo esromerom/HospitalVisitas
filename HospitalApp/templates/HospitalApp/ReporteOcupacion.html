@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <title>Reportes</title>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="col-3">
+            <div class="container-fluid">
+
+            </div>
+        </div>
+        <div class="col-9">
+            {% if total > 0 %}
+                {% load django_tables2 %}
+                {% render_table tabla %}
+                <h4>Total de visitantes: {{ total }}</h4>
+            {% else %}
+                <h2>No aparecen registrados Visitantes dentro del hospital.</h2>
+            {% endif %}
+{#                {% for cama in camas %}#}
+{#                        <div class="row">#}
+{#                            <div class="col-sm">#}
+{#                                {{ cama.nombre }}#}
+{#                            </div>#}
+{#                            <div class="col-sm">#}
+{#                                {{ cama.disponibilidad }}#}
+{#                            </div>#}
+{#                            <div class="col-sm">#}
+{#                                {{ cama.ocupacion }}#}
+{#                            </div>#}
+{#                            <div class="col-sm">#}
+{#                                {{ cama.iddependencia.nombres }}#}
+{#                            </div>#}
+{#                            <div class="col-sm">#}
+{#                                {{ cama.idhabitacion.idtorre.nombre}}#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{##}
+{#                {% endfor %}#}
+                <button class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
+                    Refrescar
+                </button>
+                <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">Link</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

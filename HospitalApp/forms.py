@@ -14,22 +14,31 @@ class HomeForm(forms.ModelForm):
         model = Dependencia
         fields = ('nombres','hora_inicio','hora_fin','cupo','menores')
 
+
 class Torres(forms.ModelForm):
     nombre =  forms.CharField()
     class Meta:
         model = Torre
         fields = ('nombre', 'npisos')
+
+
 class nombreChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombre)
+
 
 class habitacionChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombrehabitacion)
 
-class dependeciaChoiceFiels(forms.ModelChoiceField):
+
+class dependeciaChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombres)
+
+class torreChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return (obj.nombre)
 
 class Habitaciones(forms.ModelForm):
     nombrehabitacion = forms.CharField()
@@ -39,12 +48,19 @@ class Habitaciones(forms.ModelForm):
         model = Habitacion
         fields = ('nombrehabitacion', 'piso', 'idtorre','ncamas')
 
+
 class Camas(forms.ModelForm):
     nombre = forms.CharField()
     idhabitacion = habitacionChoiceField(queryset=Habitacion.objects.all())
-    iddependencia = dependeciaChoiceFiels(queryset=Dependencia.objects.all())
+    iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all())
     disponibilidad = Dependencia.objects.all()
     class Meta:
         model = Cama
         fields = ('nombre', 'idhabitacion', 'iddependencia', )
 
+
+class ReporteOcupacion(forms.ModelForm):
+    comDependencia = dependeciaChoiceField(queryset=Dependencia.objects.all())
+    class Meta:
+        model = Dependencia
+        fields = ('nombres',)
