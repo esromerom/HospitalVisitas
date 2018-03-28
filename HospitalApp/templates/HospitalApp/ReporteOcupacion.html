@@ -29,9 +29,9 @@
                         </div>
                         <div class="col-4">
                             {% for format in tabla.export_formats %}
-                            <><a class=select2-container--focus href="{% querystring '_export'=format %}" >
+                            <h5><a class=select2-container--focus href="{% querystring '_export'=format %}" >
                                 Exportar a archivo <code>.{{ format }}</code>
-                            </a></>
+                            </a></h5>
                             {% endfor %}
                         </div>
                     </div>
