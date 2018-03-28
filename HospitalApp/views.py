@@ -2,10 +2,11 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import resolve
 from django.views.generic import TemplateView
-from HospitalApp.forms import HomeForm
+from HospitalApp.forms import Dependecias
 from HospitalApp.forms import Torres
 from HospitalApp.forms import Habitaciones
 from HospitalApp.forms import Camas
+from HospitalApp.forms import ConsultaCamas
 from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
 from django.shortcuts import render, redirect
 from django.forms import forms
@@ -15,23 +16,25 @@ from django_tables2 import RequestConfig
 from django_tables2.export.views import ExportMixin
 from django_tables2.export.export import TableExport
 from datetime import datetime
+from django.contrib.auth import authenticate, login
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 # Create your views here.
 
-class Homeview(TemplateView):
-    template_name = 'HospitalApp/Formularios.html'
+class DependenciaView(TemplateView):
+    template_name = 'HospitalApp/FormularioDependencia.html'
     def get(self, request):
-        form = HomeForm()
+        form = Dependecias()
         return render(request, self.template_name, {'form': form})
     def post(self, request):
-        form = HomeForm(request.POST)
+        form = Dependecias(request.POST)
         if form.is_valid():
             form.save()
             text = form.cleaned_data['nombres']
-            form = HomeForm()
-            return redirect('formulario')
+            form = Dependecias()
+            return redirect('formulariodependencia')
         else:
-            return redirect('formulario')
+            return redirect('formulariodependencia')
         args = {'form': form, 'text': text}
         return render(request, self.template_name, args)
 
@@ -56,7 +59,6 @@ class TorreView(TemplateView):
 
 class HabitacionView(TemplateView):
     template_name = 'HospitalApp/FormularioHabitaciones.html'
-
     def get(self, request):
         form = Habitaciones
         return render(request, self.template_name,{'form': form})
@@ -91,9 +93,47 @@ class CamaView(TemplateView):
         args = {'form':form, 'text': text}
         return render(request, self.template_name, args)
 
+"""class ConsultaCamaView(TemplateView):
+    template_name = 'HospitalApp/AdministrarCamas.html'
+    def get(self, request):
+        form = ConsultaCamas()
+        return render(request, self.template_name,{'form': form})
+    def post(self, request):
+        form = ConsultaCamas(request.POST)
+        if form.is_valid():
+            nr = form.save()
+            nr.disponibilidad = nr.iddependencia.cupo
+            nr.ocupacion = 0
+            nr.save()
+            text = form.cleaned_data['nombre']
+            form = ConsultaCamas()
+            return  redirect('administrarcama')
+        else:
+            return redirect('administrarcama')
+        args = {'form':form, 'text': text}
+        return render(request, self.template_name, args)"""
+
+
+def ConsultaCamaView(request):
+    if request.method == 'POST':
+        form = ConsultaCamas(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            print ("AQUI !!!!!  --->>>  ",cd['nombre'].idcama)
+            camaReiniciar = Cama.objects.get(idcama=cd['nombre'].idcama) #id or pk or whatever you want
+            print ("AQUI !!!!!  --->>>  ",camaReiniciar)
+            camaReiniciar.ocupacion = 0
+            camaReiniciar.save()
+    form = ConsultaCamas()
+    return render(request, 'HospitalApp/AdministrarCamas.html', {
+        'item': Cama.objects.all(),
+        'form' : form,
+        })
 
 def home(request):
     return render(request, 'HospitalApp/homeHospital.html')
+
+
 
 
 def admin(request):

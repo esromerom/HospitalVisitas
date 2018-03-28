@@ -1,10 +1,4 @@
-{% extends "base.html" %}
-
-{% block head %}
-    <title>Reportes</title>
-{% load static %}
-    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
-{% endblock %}
+{% extends "basereportes.html" %}
 
 {% block body %}
     <div class="container">
@@ -20,8 +14,8 @@
                 {% render_table tabla %}
                 <p> </p>
                 </div>
-                <h6>Total de visitantes dentro: {{ totalVisitantes }}. </h6>
-                <h6>Total de camas con visitantes: {{ totalCamas }}. </h6>
+                <h2>Total de visitantes dentro: {{ totalVisitantes }}. </h2>
+                <h2>Total de camas con visitantes: {{ totalCamas }}. </h2>
                 <p> </p>
             {% else %}
                 <p> </p>
@@ -55,5 +49,5 @@
                 <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">Link</a>
             </div>
         </div>
-    </div>
+
 {% endblock %}

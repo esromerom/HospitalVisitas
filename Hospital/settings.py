@@ -28,6 +28,15 @@ DEBUG = True
 # Esto es lo que permite quepuedan verme fuera de el localhost
 ALLOWED_HOSTS = ['*']
 
+LANGUAGE_CODE = 'es'
+
+
+
+
+# Definimos la ruta de los archivos de idiomas
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 # Application definition
 
@@ -129,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-co'
 
 TIME_ZONE = 'UTC'
 
@@ -144,5 +153,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/Hospital/Servicios'

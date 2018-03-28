@@ -8,11 +8,11 @@
 {% block body %}
     {% if user.is_authenticated %}
 <div class = container>
-    <h1>Nueva cama</h1>
+    <h1>Administrar cama</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary botonform">Insertar</button>
+        <button type="submit" class="btn btn-primary botonform">Reiniciar</button>
     </form>
     <h2>{{ text }} </h2>
 </div>

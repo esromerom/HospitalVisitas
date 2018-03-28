@@ -1,0 +1,43 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
+    {% block head %}
+    {% endblock %}
+</head>
+{% if user.is_authenticated %}
+<nav class="navbar navcustom">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Policlinico Olaya Herrera</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/Hospital/Servicios/admin/FormulariosTorres/">Agregar torres</a></li>
+            <li><a href="/Hospital/Servicios/admin/FormularioDependencias">Agregar dependencias</a></li>
+            <li><a href="/Hospital/Servicios/admin/FormulariosHabitaciones">Agregar habitaciones</a></li>
+            <li><a href="/Hospital/Servicios/admin/FormulariosCamas">Agregar camas</a></li>
+            <li><a href="/Hospital/Servicios/admin/AdministrarCamas">Administrar camas</a></li>
+            <li><a href="/Hospital/Servicios/Reportes/">Consultas y reportes</a></li>
+         </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/Hospital/Servicios/"><span class="glyphicon glyphicon-arrow-left"></span> Volver</a></li>
+          <li><a href="/Hospital/logout/"><span class="glyphicon glyphicon-log-in"></span> Salir</a></li>
+        </ul>
+      </div>
+    </nav>
+
+<body>
+{% else %}
+
+    {% endif %}
+
+    {% block body %}
+    {% endblock %}
+</body>
+</html>

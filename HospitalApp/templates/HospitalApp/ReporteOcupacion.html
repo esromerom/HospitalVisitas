@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends "basereportes.html" %}
+
 {% block head %}
     <title>Reportes</title>
 {% load static %}
@@ -24,8 +25,9 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-5">
-                            <h6>Total de visitantes dentro: {{ totalVisitantes }}. </h6>
-                            <h6>Total de camas con visitantes: {{ totalCamas }}. </h6>
+                            <h2>Total de visitantes dentro: {{ totalVisitantes }}. </h2>
+                            <h2>Total de camas con visitantes: {{ totalCamas }}. </h2>
+                            <br>
                         </div>
                         <div class="col-4">
                             {% for format in tabla.export_formats %}
@@ -44,12 +46,8 @@
             {% endif %}
 
                 <div class="table-container">
-                    <button  class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
-                        Refrescar
-                    </button>
-                    <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">
-                        Atrás
-                    </a>
+                    <button type="submit" class="btn btn-primary botonform">Actualizar</button>
+
                 </div>
 
 

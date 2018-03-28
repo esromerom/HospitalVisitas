@@ -1,13 +1,24 @@
-{% extends 'base.html' %}
+{% extends 'baseformreport.html' %}
+
+{% block head %}
+    <title>Reportes</title>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
+{% endblock %}
 
 {% block body %}
 <div class = container>
-    <h1>Torres</h1>
+    {% if user.is_authenticated %}
+    <h1>Nueva Torre</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Insertar</button>
+        <button type="submit" class="btn btn-primary botonform">Insertar</button>
     </form>
     <h2>{{ text }} </h2>
 </div>
+    {% else %}
+        <img src="{% static "HospitalApp/pare.png" %}" class="img-responsive center-block" alt="My image"/>
+        <h4 >Inicie sesión primero</h4>
+    {% endif %}
 {% endblock %}

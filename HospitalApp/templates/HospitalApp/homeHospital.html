@@ -2,11 +2,16 @@
 {% extends 'base.html' %} {#Ayuda a no declarar siempre lo mismo, solo se usa un archivo base para eso.#}
 
 {% block head %}
-<title>Home</title>
+
 {% endblock %}
-
 {% block body %}
-
-    <a href="./login" class="btn btn-primary" role="button">Login</a>
-    <h2>Bienvenido</h2>
+    <div class="container-fluid text-center">
+            <h1>Bienvenido</h1>
+            <hr>
+            <br>
+            {% load static %}
+            <img src="{% static "HospitalApp/login.JPG" %}" class="img-responsive imglog" alt="My image"/>
+            <p></p>
+            <a href="./login" class="btn btn-primary boton" role="button">Ingresar</a>
+    </div>
 {% endblock %}
