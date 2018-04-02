@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <title>Reportes</title>
+    <title>Prueba Filtro</title>
 {% load static %}
     <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
 {% endblock %}
@@ -15,19 +15,19 @@
         </div>
             <div class="row"><div class="col-12">
                 <div class="table-container">
-                {% load django_tables2 %}
-                {% load bootstrap3 %}
-{#                    {% if filter %}#}
-{#                        <form action="" method="get" class="form form-inline">#}
-{#                            {% bootstrap_form filter.form layout='inline' %}#}
-{#                            {% bootstrap_button 'filter' %}#}
-{#                        </form>#}
-{#                    {% endif %}#}
-                {% render_table tabla 'django_tables2/bootstrap.html'%}
-                <p> </p>
+                    {% block content %}
+                      <form method="get">
+                          {{ filter.form.as_p }}
+                          <input type="submit" />
+                        <button type="submit">Search</button>
+                      </form>
+                      <ul>
+                      {% for dependencia in filter.qs %}
+                        <li>{{ dependencia }}{{ dependencia.ocupacion }} - {{ user.identificacion.nombre }} </li>
+                      {% endfor %}
+                      </ul>
+                    {% endblock %}
                 </div>
-
-                <p> </p>
 
                 <button class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
                     Actualizar

@@ -110,6 +110,9 @@ class Dependencia(models.Model):
         managed = False
         db_table = 'dependencia'
 
+    def __str__(self):
+        return self.nombres
+
 
 class Cama(models.Model):
     idcama = models.AutoField(primary_key=True)

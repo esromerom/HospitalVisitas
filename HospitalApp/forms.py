@@ -59,7 +59,7 @@ class Camas(forms.ModelForm):
         fields = ('nombre', 'idhabitacion', 'iddependencia', )
 
 
-class ReporteOcupacion(forms.ModelForm):
+class FormReporteOcupacion(forms.ModelForm):
     comDependencia = dependeciaChoiceField(queryset=Dependencia.objects.all())
     class Meta:
         model = Dependencia
