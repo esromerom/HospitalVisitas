@@ -3,11 +3,16 @@ from HospitalApp.models import Cama, Visitante, Asistencia
 import itertools
 
 class TablaOcupacion(tables.Table):
-    # nomCama = tables.Column()
+    nomCama = tables.Column(accessor='identificacion.idcama.nombre',
+                            verbose_name='Cama')
+    nomDependencia = tables.Column(accessor='identificacion.iddependencia.nombres',
+                                   verbose_name='Dependencia')
+    ocupacion = tables.Column(accessor='identificacion.idcama.ocupacion',
+                              verbose_name='Ocupación')
     export_formats = ['csv', 'xls']
     identificacion__iddependencia__nombres = tables.Column(footer='Visitantes adentro:')
     identificacion__idcama__ocupacion = tables.Column(footer=lambda
-    table: sum(x['identificacion__idcama__ocupacion'] for x in table.data))
+        table: sum(x['identificacion__idcama__ocupacion'] for x in table.data))
 
     def __init__(self, *args, **kwargs):
         super(TablaOcupacion, self).__init__(*args, **kwargs)
@@ -18,8 +23,10 @@ class TablaOcupacion(tables.Table):
         self.base_columns['identificacion__asistencia__numeromenores'].verbose_name = 'N. Menores'
 
     class Meta:
-        fields = ['identificacion__idcama__nombre', 'identificacion__iddependencia__nombres',
-                  'identificacion__idcama__ocupacion', 'identificacion__nombre',
+        fields = ['identificacion__idcama__nombre',
+                  'identificacion__iddependencia__nombres',
+                  'identificacion__idcama__ocupacion',
+                  'identificacion__nombre',
                   'identificacion__asistencia__numeromenores']
         model = Asistencia
         # localize = ('nombre',)
@@ -33,12 +40,19 @@ class SummingColumn(tables.Column):
 
 class TablaVisitantes(tables.Table):
     export_formats = ['csv', 'xls']
-
+    identificacion = tables.Column(accessor='identificacion',
+                                   verbose_name='Documento de identidad',
+                                   default='int')
+    nombre = tables.Column(accessor='identificacion.nombre',
+                           verbose_name='Visitante')
+    dependencia = tables.Column(accessor='identificacion.iddependencia.nombres',
+                                verbose_name='Dependencia')
+    cama = tables.Column(accessor='identificacion.idcama.nombre')
     def __init__(self, *args, **kwargs):
         super(TablaVisitantes, self).__init__(*args, **kwargs)
-        self.base_columns['identificacion__idcama__nombre'].verbose_name = ' Cama '
-        self.base_columns['identificacion__iddependencia__nombres'].verbose_name = ' Dependencia '
-        self.base_columns['identificacion__nombre'].verbose_name = ' Nombre Visitante '
+        # self.base_columns['identificacion__idcama__nombre'].verbose_name = ' Cama '
+        # self.base_columns['identificacion__iddependencia__nombres'].verbose_name = ' Dependencia '
+        # self.base_columns['identificacion__nombre'].verbose_name = ' Nombre Visitante '
         self.base_columns['identificacion'].verbose_name = ' Documento de Identidad '
         self.base_columns['fechahorainicio'].verbose_name = ' Fecha-Hora Entrada '
         self.base_columns['fechahorafin'].verbose_name = ' Fecha-Hora Salida '
@@ -46,11 +60,13 @@ class TablaVisitantes(tables.Table):
 
     class Meta:
         model = Asistencia
-        fields = ['identificacion__idcama__nombre', 'identificacion__iddependencia__nombres',
-                  'identificacion__nombre', 'identificacion',
-                  'fechahorainicio', 'fechahorafin','estado']
-        sequence = ('identificacion', 'identificacion__nombre',
-                    'identificacion__iddependencia__nombres',
-                    'identificacion__idcama__nombre', 'estado',
+        fields = ['fechahorainicio',
+                  'fechahorafin',
+                  'estado']
+        sequence = ('identificacion','nombre','dependencia',
+                    'cama', 'estado',
                     'fechahorainicio', 'fechahorafin')
         template = 'django_tables2/bootstrap.html'
+
+    # def render_identificacion(self):
+    #     return '%d' % next(self.identificacion)

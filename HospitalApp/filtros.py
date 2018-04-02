@@ -1,43 +1,73 @@
 import django_filters
-from HospitalApp.models import Dependencia, Asistencia, Visitante
+from HospitalApp.models import Dependencia, Asistencia, Cama, Visitante
+from django import forms
+from django.db import models
+from  HospitalApp import filter_extra
+import django_bootstrap3_daterangepicker.widgets as widgets
 
-class FiltroPrueba(django_filters.FilterSet):
-    # nombres = django_filters.ModelChoiceFilter(queryset=Dependencia.objects.values_list('nombres', flat=True))
-    nombres = django_filters.ModelChoiceFilter(queryset=Dependencia.objects.all())
-    class Meta:
-        model = Dependencia
-        # fields = ['identificacion__nombre',]
-        fields = {'nombres': ['exact', 'iexact'], }
+# def dependencias(request):
+#     if request is None:
+#         return Asistencia.objects.none()
+#
+#     dependencia = request.identificacion.iddependencia.nombres
+#     return dependencia.nombres.all()
 
+class FiltroPrueba1(django_filters.FilterSet):
+    dependencias = {}
+    dependencia = django_filters.ModelChoiceFilter(queryset=dependencias)
 
-class FiltroVisitantes(django_filters.FilterSet):
-    # nombre = django_filters.CharFilter(lookup_expr='iexact')
-    # nombre_cont = django_filters.NumberFilter(name='nombre', lookup_expr='icontains')
-    #
-    # entrada = django_filters.NumberFilter(name='fechahorainicio', lookup_expr='fecha')
-    # release_year__gt = django_filters.NumberFilter(name='release_date', lookup_expr='year__gt')
-    # release_year__lt = django_filters.NumberFilter(name='release_date', lookup_expr='year__lt')
-    #
-    # manufacturer__name = django_filters.CharFilter(lookup_expr='icontains')
     class Meta:
         model = Asistencia
-        # los que se listan en fields generan un fltro automatico por exacta correpondencia
-        fields = {
-            'identificacion': ['exact'],
-            'identificacion__nombre': ['iexact', 'icontains'],
-        }
+        fields = ['identificacion__idcama__nombre', 'identificacion__iddependencia__nombres',
+                  'identificacion__idcama__ocupacion', 'identificacion__nombre',
+                  'identificacion__asistencia__numeromenores']
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class FiltroPrueba2(django_filters.FilterSet):
+    dependencia = django_filters.ModelChoiceFilter(queryset=Dependencia.objects.all(),
+                                                   field_name='identificacion__iddependencia__nombres',
+                                                   label='Dependencia')
+    identificacion__idcama = django_filters.ModelChoiceFilter(queryset=Cama.objects.all(),
+                                                              label='Cama'
+                                                              )
+    identificacion__nombre = django_filters.CharFilter(lookup_expr='icontains',label='Nombre',)
+    identificacion = django_filters.NumberFilter(lookup_expr='exact', label='Numero de Cedula')
+    # fecha = django_filters.DateRangeFilter(widget=widgets.DateRangeWidget(picker_options={
+    #     'ranges': widgets.common_dates()}))
+    # fecha = filter_extra.DateRangeFilter(label='Date Range')
+    # fecha = django_filters.DateFromToRangeFilter(field_name='fechahorainicio',
+    #                                              label='Fecha(AAAA-MM-DD)',
+    #                                              lookup_expr='icontains',
+    #                                              )
+    rango = django_filters.DateRangeFilter(field_name='fechahorainicio',
+                                           label='Fecha (Rango)',
+                                           )
+    fechahorainicio__gte = django_filters.DateTimeFilter(widget = DateInput(attrs={'class': 'datepicker'}),
+                                      field_name='fechahorainicio',
+                                      label='Fecha (Desde)',
+                                      lookup_expr='gte'
+                                      )
+    fechahorafin__lte = django_filters.DateTimeFilter(widget = DateInput(attrs={'class': 'datepicker'}),
+                                      field_name='fechahorainicio',
+                                      label='Fecha (Hasta)',
+                                      lookup_expr='lt'
+                                      )
 
 
-def dependencias(request):
-    if request is None:
-        return Dependencia.objects.none()
+    class Meta:
+        model = Asistencia
+        fields = {'identificacion__nombre':[],
+                  'identificacion__idcama':[],
+                  # 'fechahorainicio':['range'],
+                  }
 
-    nombres = request.identificacion.iddependencia
-    return nombres.dependencia_set.all()
+    @classmethod
+    def filter_for_lookup(cls, f, lookup_type):
+        # override date range lookups
+        if isinstance(f, models.DateField) and lookup_type == 'range':
+            return django_filters.DateRangeFilter, {}
 
-
-class FiltroDependencia(django_filters.FilterSet):
-    dependencia = django_filters.ModelChoiceFilter(queryset=Dependencia.objects.all())
-    # class Meta:
-    #     model = Dependencia
-    #     fields = {'nombres': ['iexact', 'icontains']}
+        # use default behavior otherwise
+        return super().filter_for_lookup(f, lookup_type)

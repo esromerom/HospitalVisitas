@@ -12,6 +12,10 @@
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+{#                <h3>Usuario</h3>#}
+{#                {{ form.username }}#}
+{#                <h3>Contraseña</h3>#}
+{#                {{ form.password }}#}
                 <button type="submit" class="btn btn-outline-success">Login</button>
             </form>
         </div>

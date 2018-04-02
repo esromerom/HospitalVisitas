@@ -14,26 +14,43 @@
             </div>
         </div>
             <div class="row"><div class="col-12">
-                <div class="table-container">
-                    {% block content %}
-                      <form method="get">
-                          {{ filter.form.as_p }}
-                          <input type="submit" />
-                        <button type="submit">Search</button>
-                      </form>
-                      <ul>
-                      {% for dependencia in filter.qs %}
-                        <li>{{ dependencia }}{{ dependencia.ocupacion }} - {{ user.identificacion.nombre }} </li>
-                      {% endfor %}
-                      </ul>
-                    {% endblock %}
+                <div class="table-responsive">
+                    {% load render_table from django_tables2 %}
+                    {% load bootstrap3 %}
+{#                    {% bootstrap_css %}#}
+{#                    {% bootstrap_javascript %}#}
+{#                    {% bootstrap_messages %}#}
+{#                    <form method="get">#}
+{#                        {{ filter.form.as_p }}#}
+{#                        <button class="btn btn-outline-primary btn-lg" type="submit">Search</button>#}
+                    {% if filter %}
+
+                        <form action="" method="get" class="form form-horizontal">
+
+                            {% bootstrap_form filter.form layout='horizontal' %}
+{#                                {% bootstrap_button 'Filtrar' %}#}
+
+                                 {% buttons %}
+                                 <button type="submit" class="btn btn-outline-primary btn-lg" type=submit  >
+                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Actualizar
+                                 </button>
+                                 {% endbuttons %}
+                                 <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">Reset</a>
+
+                        </form>
+
+                    {% endif %}
+
+                    {% render_table tabla 'django_tables2/bootstrap-responsive.html' %}
+
+{#                    </form>#}
+                    <a href="../" class="btn btn-outline-danger btn-lg " role="button" aria-pressed="true">Salir</a>
+
+
                 </div>
 
-                <button class="btn btn-outline-primary btn-lg" type=button  value="reload_reports">
-                    Actualizar
-                </button>
-                <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">Atrás</a>
-            </div></div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
