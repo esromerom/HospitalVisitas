@@ -1,5 +1,4 @@
-{% extends "basereportes.html" %}
-
+{% extends "base.html" %}
 {% block head %}
     <title>Reportes</title>
 {% load static %}
@@ -13,27 +12,47 @@
 
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-10">
             {% if totalCamas > 0 %}
                 {% load django_tables2 %}
-{#                {% querystring '_export'='csv' %}home#}
-                <div class="table-container" >
+                {% load bootstrap3 %}
+                <div class="table-container  table-responsive" >
+                    {% if filter %}
+                        <form action="" method="get" class="form form-inline">
+                            {% bootstrap_form filter.form layout='inline' %}
+                            {% bootstrap_button 'filter' %}
+                        </form>
+                    {% endif %}
+                    {% render_table tabla  'django_tables2/bootstrap.html'%}
 
-                {% render_table tabla %}
-
+{#                    <form method="get">#}
+{#    {{ filter.form.as_p }}#}
+{#    <button type="submit">Search</button>#}
+{#  </form>#}
+{#  <ul>#}
+{#  {% for iddependencia in filter.qs %}#}
+{#    <li>{{ iddependencia.nombres }}</li>#}
+{#  {% endfor %}#}
+{#  </ul>#}
+                </div>
+                <div class="row">
+{#                    <form method="post">#}
+{#                        {% csrf_token %}#}
+{#                        {{ form.as_p }}#}
+{#                        <button type="submit">Filtrar 2</button>#}
+{#                    </form>#}
                 </div>
                 <div class="container">
                     <div class="row">
                         <div class="col-5">
-                            <h2>Total de visitantes dentro: {{ totalVisitantes }}. </h2>
-                            <h2>Total de camas con visitantes: {{ totalCamas }}. </h2>
-                            <br>
+{#                            <h6>Total de visitantes dentro: {{ totalVisitantes }}. </h6>#}
+                            <h6>Total de camas con visitantes: {{ totalCamas }}. </h6>
                         </div>
                         <div class="col-4">
                             {% for format in tabla.export_formats %}
-                            <h5><a class=select2-container--focus href="{% querystring '_export'=format %}" >
+                            <h6><a class=select2-container--focus href="{% querystring '_export'=format %}" >
                                 Exportar a archivo <code>.{{ format }}</code>
-                            </a></h5>
+                            </a></h6>
                             {% endfor %}
                         </div>
                     </div>
@@ -41,13 +60,16 @@
                 <p> </p>
             {% else %}
                 <p> </p>
-                <h2 style="color: darkslategrey">No aparecen registrados Visitantes dentro del hospital.</h2>
+                <h3 style="color: darkslategrey">No aparecen registrados Visitantes dentro del hospital.</h3>
                 <p> </p>
             {% endif %}
-
                 <div class="table-container">
-                    <button type="submit" class="btn btn-primary botonform">Actualizar</button>
-
+                    <button  class="btn btn-outline-primary btn-lg" type=submit  value="reload_reports">
+                        Refrescar
+                    </button>
+                    <a href="./" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true">
+                        Atrás
+                    </a>
                 </div>
 
 
