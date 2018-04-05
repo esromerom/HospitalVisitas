@@ -2,10 +2,11 @@ from django.shortcuts import render, HttpResponse, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import resolve
 from django.views.generic import TemplateView
-from HospitalApp.forms import HomeForm
+from HospitalApp.forms import Dependecias
 from HospitalApp.forms import Torres
 from HospitalApp.forms import Habitaciones
 from HospitalApp.forms import Camas
+from HospitalApp.forms import ConsultaCamas
 from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
 from django.shortcuts import render, redirect
 from django.forms import forms
@@ -20,6 +21,8 @@ from django_tables2.export.export import TableExport
 from HospitalApp.filtros import FiltroPrueba1, FiltroPrueba2
 
 from datetime import datetime
+from django.contrib.auth import authenticate, login
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 
 def ReportePrueba2(request):
@@ -51,20 +54,20 @@ class ReportePrueba1(SingleTableMixin, FilterView):
 
 
 
-class Homeview(TemplateView):
-    template_name = 'HospitalApp/Formularios.html'
+class DependenciaView(TemplateView):
+    template_name = 'HospitalApp/FormularioDependencia.html'
     def get(self, request):
-        form = HomeForm()
+        form = Dependecias()
         return render(request, self.template_name, {'form': form})
     def post(self, request):
-        form = HomeForm(request.POST)
+        form = Dependecias(request.POST)
         if form.is_valid():
             form.save()
             text = form.cleaned_data['nombres']
-            form = HomeForm()
-            return redirect('formulario')
+            form = Dependecias()
+            return redirect('formulariodependencia')
         else:
-            return redirect('formulario')
+            return redirect('formulariodependencia')
         args = {'form': form, 'text': text}
         return render(request, self.template_name, args)
 
@@ -76,7 +79,6 @@ class TorreView(TemplateView):
         return render(request, self.template_name,{'form': form})
     def post(self, request):
         form = Torres(request.POST)
-        text = ''
         if form.is_valid():
             form.save()
             text = form.cleaned_data['nombre']
@@ -90,13 +92,11 @@ class TorreView(TemplateView):
 
 class HabitacionView(TemplateView):
     template_name = 'HospitalApp/FormularioHabitaciones.html'
-
     def get(self, request):
         form = Habitaciones
         return render(request, self.template_name,{'form': form})
     def post(self, request):
         form = Habitaciones(request.POST)
-        text = ''
         if form.is_valid():
             form.save()
             text = form.cleaned_data['nombrehabitacion']
@@ -126,9 +126,47 @@ class CamaView(TemplateView):
         args = {'form':form, 'text': text}
         return render(request, self.template_name, args)
 
+"""class ConsultaCamaView(TemplateView):
+    template_name = 'HospitalApp/AdministrarCamas.html'
+    def get(self, request):
+        form = ConsultaCamas()
+        return render(request, self.template_name,{'form': form})
+    def post(self, request):
+        form = ConsultaCamas(request.POST)
+        if form.is_valid():
+            nr = form.save()
+            nr.disponibilidad = nr.iddependencia.cupo
+            nr.ocupacion = 0
+            nr.save()
+            text = form.cleaned_data['nombre']
+            form = ConsultaCamas()
+            return  redirect('administrarcama')
+        else:
+            return redirect('administrarcama')
+        args = {'form':form, 'text': text}
+        return render(request, self.template_name, args)"""
+
+
+def ConsultaCamaView(request):
+    if request.method == 'POST':
+        form = ConsultaCamas(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            print ("AQUI !!!!!  --->>>  ",cd['nombre'].idcama)
+            camaReiniciar = Cama.objects.get(idcama=cd['nombre'].idcama) #id or pk or whatever you want
+            print ("AQUI !!!!!  --->>>  ",camaReiniciar)
+            camaReiniciar.ocupacion = 0
+            camaReiniciar.save()
+    form = ConsultaCamas()
+    return render(request, 'HospitalApp/AdministrarCamas.html', {
+        'item': Cama.objects.all(),
+        'form' : form,
+        })
 
 def home(request):
     return render(request, 'HospitalApp/homeHospital.html')
+
+
 
 
 def admin(request):
@@ -175,15 +213,12 @@ class ReporteOcupacion(ExportMixin, FilterView, SingleTableView):
         totalCamas = Cama.objects.filter(ocupacion__gt=0).count()
         visitantes_adentro = Asistencia.objects.filter(estado='E')
         totalVisitantes = len(visitantes_adentro)
-        # visitas = Asistencia.objects.filter(fechahorafin__day=)
         tabla = TablaOcupacion(visitantes_adentro.values('identificacion__idcama__nombre',
                                                          'identificacion__iddependencia__nombres',
                                                          'identificacion__idcama__ocupacion',
                                                          'identificacion__nombre',
                                                          'identificacion__asistencia__numeromenores'))
-
-
-        config = RequestConfig(request, paginate={"per_page": 25, "page": 1}).configure(tabla)
+        config = RequestConfig(request).configure(tabla)
         export_format = request.GET.get('_export', 'CSV')
         if TableExport.is_valid_format(export_format):
             ahora = datetime.now()

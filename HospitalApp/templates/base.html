@@ -1,42 +1,18 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet"
-          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-          crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
     {% load static %}
     <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
     {% block head %}
-    <meta charset="UTF-8">
-    <title>Title</title>
     {% endblock %}
 </head>
 <body>
  <br>
- <div class="container">
 
-      <!-- Static navbar -->
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <div class="navbar-header">
-
-            <a class="navbar-brand" href="/">Control de Visitas</a>
-            <a class="nav navbar-nav navbar-right">
-                <li><a href="/Hospital/registro_operario">Registrarse</a></li>
-            </a>
-          </div><!--/.nav-collapse -->
-        </div><!--/.container-fluid -->
-      </nav>
- </div> <!-- /container -->
-    <br>
-     {% block body %}
-        <h1>Inicio</h1>
-
+    {% block body %}
     {% endblock %}
 </body>
 </html>

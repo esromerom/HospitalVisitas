@@ -1,3 +1,72 @@
+
 body{
-    background-color: papayawhip;
+    background-color: #f4f4f4;
+    height: 100%;
+}
+
+/* only the submit button is matched by this selector,
+   but to be sure you could use an id or class for that button */
+
+
+h1{
+    font-family:verdana;
+}
+h2{
+    font-family:verdana;
+    font-size: 150%;
+}
+h3{
+    font-family:verdana;
+    font-size: 150%;
+}
+h4
+{
+text-align: center;
+
+}
+.imglog {
+    border-radius: 15px;
+}
+.imgstop {
+    border-radius: 15px;
+margin: 0 auto;
+
+}
+
+.boton{
+    width: 30%;
+    height: 5%;
+    font-family:verdana;
+    font-size: 100%;
+
+}
+
+.botonlogin{
+    width: 10%;
+    height: 5%;
+    font-family:verdana;
+    font-size: 100%;
+}
+
+.botonform{
+    height: 5%;
+    font-family:verdana;
+    font-size: 100%;
+}
+
+.navcustom{
+    background-color: #389BFF;
+}
+.navcustom a {
+text-decoration: none;
+color: white;
+}
+.navcustom ul li a {
+text-decoration: none;
+color: white;
+}
+
+.navcustom ul li:hover a {
+    background-color: #69adff;
+    color: white;
 }
