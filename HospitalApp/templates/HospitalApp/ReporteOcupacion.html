@@ -16,13 +16,8 @@
             {% if totalCamas > 0 %}
                 {% load django_tables2 %}
                 {% load bootstrap3 %}
-                <div class="table-container  table-responsive" >
-                    {% if filter %}
-                        <form action="" method="get" class="form form-inline">
-                            {% bootstrap_form filter.form layout='inline' %}
-                            {% bootstrap_button 'filter' %}
-                        </form>
-                    {% endif %}
+                <div class="table-container  " >
+
                     {% render_table tabla  'django_tables2/bootstrap.html'%}
 
 {#                    <form method="get">#}

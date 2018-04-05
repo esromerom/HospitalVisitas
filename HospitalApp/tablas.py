@@ -3,12 +3,7 @@ from HospitalApp.models import Cama, Visitante, Asistencia
 import itertools
 
 class TablaOcupacion(tables.Table):
-    nomCama = tables.Column(accessor='identificacion.idcama.nombre',
-                            verbose_name='Cama')
-    nomDependencia = tables.Column(accessor='identificacion.iddependencia.nombres',
-                                   verbose_name='Dependencia')
-    ocupacion = tables.Column(accessor='identificacion.idcama.ocupacion',
-                              verbose_name='Ocupación')
+
     export_formats = ['csv', 'xls']
     identificacion__iddependencia__nombres = tables.Column(footer='Visitantes adentro:')
     identificacion__idcama__ocupacion = tables.Column(footer=lambda
@@ -29,7 +24,9 @@ class TablaOcupacion(tables.Table):
                   'identificacion__nombre',
                   'identificacion__asistencia__numeromenores']
         model = Asistencia
-        # localize = ('nombre',)
+        # sequence = ['nomCama','nomDependencia',
+        #             'ocupacion', 'identificacion__nombre',
+        #             'numeromenores']
         template = 'django_tables2/bootstrap.html'
 
 

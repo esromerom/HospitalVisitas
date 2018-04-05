@@ -161,13 +161,13 @@ def visitas(request):
 
 
 class ReporteOcupacion(ExportMixin, FilterView, SingleTableView):
-    table_class = TablaOcupacion
-    model = Asistencia
+    # table_class = TablaOcupacion
+    # model = Asistencia
     template_name = "HospitalApp/ReporteOcupacion.html"
-    filterset_class = FiltroPrueba2
-
-    def get_table_data(self):
-        return self.object_list
+    # filterset_class = FiltroPrueba2
+    #
+    # def get_table_data(self):
+    #     return self.object_list
 
 
     def get(self, request):
