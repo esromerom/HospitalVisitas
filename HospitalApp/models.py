@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 
 class Asistencia(models.Model):
     idasistencia = models.AutoField(primary_key=True)
-    identificacion = models.ForeignKey('Visitante', models.DO_NOTHING, db_column='identificacion')
+    identificacion = models.ForeignKey('Visitante', models.DO_NOTHING, db_column='identificacion',)
     idmenor = models.IntegerField(blank=True, null=True)
     dispositivo = models.IntegerField()
     fechahorainicio = models.DateTimeField(blank=True, null=True)
@@ -110,6 +110,9 @@ class Dependencia(models.Model):
         managed = False
         db_table = 'dependencia'
 
+    def __str__(self):
+        return self.nombres
+
 
 class Cama(models.Model):
     idcama = models.AutoField(primary_key=True)
@@ -122,7 +125,8 @@ class Cama(models.Model):
     class Meta:
         managed = False
         db_table = 'cama'
-
+    def __str__(self):
+        return self.nombre
 
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()

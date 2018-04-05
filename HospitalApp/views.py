@@ -10,16 +10,49 @@ from HospitalApp.forms import ConsultaCamas
 from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
 from django.shortcuts import render, redirect
 from django.forms import forms
-from HospitalApp.forms import ReporteOcupacion
-from HospitalApp.tablas import TablaOcupacion
-from django_tables2 import RequestConfig
+import django
+from HospitalApp.forms import FormReporteOcupacion
+from HospitalApp.tablas import TablaOcupacion, TablaVisitantes
+from django_tables2 import RequestConfig, SingleTableView
+from django_filters.views import FilterView
+from django_tables2.views import SingleTableMixin
 from django_tables2.export.views import ExportMixin
 from django_tables2.export.export import TableExport
+from HospitalApp.filtros import FiltroPrueba1, FiltroPrueba2
+
 from datetime import datetime
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_list_or_404, get_object_or_404
 
-# Create your views here.
+
+def ReportePrueba2(request):
+    lista = Asistencia.objects.all()
+    filtro = FiltroPrueba2(request.GET, queryset=lista)
+    print (filtro)
+    return render(request, 'HospitalApp/PruebaFiltro.html', {'filter': filtro   })
+
+# SingleTableMixin, FilterView
+class ReportePrueba1(SingleTableMixin, FilterView):
+    table_class = TablaVisitantes
+    model = Asistencia
+    template_name = "HospitalApp/PruebaFiltro.html"
+    filterset_class = FiltroPrueba2
+
+    def get_queryset(self, **kwargs):
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(ReportePrueba1, self).get_context_data(**kwargs)
+        filter = self.filterset_class(self.request.GET, queryset=self.get_queryset(**kwargs))
+        # filter.form.helper = FooFilterFormHelper()
+        table = self.table_class(filter.qs)
+        RequestConfig(self.request,paginate={"per_page": 5, "page": 1}).configure(table)
+        context['filter'] = filter
+        context['tabla'] = table
+        return context
+
+
+
 
 class DependenciaView(TemplateView):
     template_name = 'HospitalApp/FormularioDependencia.html'
@@ -165,13 +198,20 @@ def visitas(request):
     return render(request, 'HospitalApp/RegistroVisitas.html')
 
 
-class ReporteOcupacion(ExportMixin, TemplateView):
+class ReporteOcupacion(ExportMixin, FilterView, SingleTableView):
+    table_class = TablaOcupacion
+    model = Asistencia
     template_name = "HospitalApp/ReporteOcupacion.html"
+    filterset_class = FiltroPrueba2
+
+    def get_table_data(self):
+        return self.object_list
+
+
     def get(self, request):
-        forms = ReporteOcupacion
+        form = FormReporteOcupacion()
         totalCamas = Cama.objects.filter(ocupacion__gt=0).count()
         visitantes_adentro = Asistencia.objects.filter(estado='E')
-
         totalVisitantes = len(visitantes_adentro)
         tabla = TablaOcupacion(visitantes_adentro.values('identificacion__idcama__nombre',
                                                          'identificacion__iddependencia__nombres',
@@ -182,37 +222,42 @@ class ReporteOcupacion(ExportMixin, TemplateView):
         export_format = request.GET.get('_export', 'CSV')
         if TableExport.is_valid_format(export_format):
             ahora = datetime.now()
-            fecha = ahora.strftime("%d-%M-%Y")
+            fecha = ahora.strftime("%d-%m-%Y")
             exporter = TableExport(export_format, tabla)
             return exporter.response('Visitantes al cierre '+fecha+'.{}'.format(export_format))
-        args = {'tabla': tabla, 'forms': forms,
+        args = {'tabla': tabla, 'forms': form,
                 'totalCamas': totalCamas,
                 'totalVisitantes': totalVisitantes,
                 }
 
         return render(request, self.template_name, args)
 
-    def post(self, request):
-        pass
 
 
-class ReporteVisitantes(TemplateView):
-    template_name = "HospitalApp/ReporteOcupacion.html"
+# class ReporteVisitantes(SingleTableMixin, FilterView, TemplateView):
 
-    def get(self, request):
-        forms = ReporteOcupacion
-        camas = Cama.objects.filter(ocupacion__gt=0)
-        totalCamas = len(camas)
-        totalVisitantes = sum(Cama.objects.filter(ocupacion__gt=0).values_list('ocupacion', flat=True))
+class ReporteVisitantes(SingleTableMixin, FilterView):
+    table_class = TablaVisitantes
+    model = Asistencia
+    template_name = "HospitalApp/ReporteVisitantes.html"
+    filterset_class = FiltroPrueba2
 
-        tabla = TablaOcupacion(camas.values('nombre', 'iddependencia__nombres', 'ocupacion'))
-        args = {'camas': camas, 'tabla': tabla, 'forms': forms,
-                'totalCamas': totalCamas, 'totalVisitantes': totalVisitantes}
+    def get_queryset(self, **kwargs):
+        return self.model.objects.all()
 
-        return render(request, self.template_name, args)
+    def get_context_data(self, **kwargs):
+        context = super(ReporteVisitantes, self).get_context_data(**kwargs)
+        filter = self.filterset_class(self.request.GET, queryset=self.get_queryset(**kwargs))
+        # filter.form.helper = FooFilterFormHelper()
+        table = self.table_class(filter.qs)
+        RequestConfig(self.request, paginate={"per_page": 5, "page": 1}).configure(table)
+        context['filter'] = filter
+        context['tabla'] = table
+        return context
 
-    def post(self, request):
-        pass
+
+class ReporteFiltradoOcupacion(ReporteOcupacion):
+    pass
 
 def menuReportes(request):
     return render(request, 'HospitalApp/menuReportes.html')
