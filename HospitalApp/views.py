@@ -7,15 +7,24 @@ from HospitalApp.forms import Torres
 from HospitalApp.forms import Habitaciones
 from HospitalApp.forms import Camas
 from HospitalApp.forms import ConsultaCamas
+from HospitalApp.forms import FormReporteOcupacion
 from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
 from django.shortcuts import render, redirect
 from django.forms import forms
 import django
-from HospitalApp.forms import FormReporteOcupacion
 from HospitalApp.tablas import TablaOcupacion, TablaVisitantes
 from django_tables2 import RequestConfig, SingleTableView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
+
+from HospitalApp.forms import ConsultaCamas
+from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
+from django.shortcuts import render, redirect
+from django.forms import forms
+from HospitalApp.forms import ReporteOcupacion
+from HospitalApp.tablas import TablaOcupacion
+from django_tables2 import RequestConfig
+
 from django_tables2.export.views import ExportMixin
 from django_tables2.export.export import TableExport
 from HospitalApp.filtros import FiltroPrueba1, FiltroPrueba2
@@ -52,8 +61,6 @@ class ReportePrueba1(SingleTableMixin, FilterView):
         return context
 
 
-
-
 class DependenciaView(TemplateView):
     template_name = 'HospitalApp/FormularioDependencia.html'
     def get(self, request):
@@ -79,6 +86,7 @@ class TorreView(TemplateView):
         return render(request, self.template_name,{'form': form})
     def post(self, request):
         form = Torres(request.POST)
+        text = ''
         if form.is_valid():
             form.save()
             text = form.cleaned_data['nombre']
@@ -97,6 +105,7 @@ class HabitacionView(TemplateView):
         return render(request, self.template_name,{'form': form})
     def post(self, request):
         form = Habitaciones(request.POST)
+        text = ''
         if form.is_valid():
             form.save()
             text = form.cleaned_data['nombrehabitacion']
@@ -167,8 +176,6 @@ def home(request):
     return render(request, 'HospitalApp/homeHospital.html')
 
 
-
-
 def admin(request):
     return render(request, 'HospitalApp/menuFormularios.html')
 
@@ -199,13 +206,13 @@ def visitas(request):
 
 
 class ReporteOcupacion(ExportMixin, FilterView, SingleTableView):
-    # table_class = TablaOcupacion
-    # model = Asistencia
+    table_class = TablaOcupacion
+    model = Asistencia
     template_name = "HospitalApp/ReporteOcupacion.html"
     # filterset_class = FiltroPrueba2
-    #
-    # def get_table_data(self):
-    #     return self.object_list
+
+    def get_table_data(self):
+        return self.object_list
 
 
     def get(self, request):
@@ -233,8 +240,8 @@ class ReporteOcupacion(ExportMixin, FilterView, SingleTableView):
         return render(request, self.template_name, args)
 
 
-
 # class ReporteVisitantes(SingleTableMixin, FilterView, TemplateView):
+
 
 class ReporteVisitantes(SingleTableMixin, FilterView):
     table_class = TablaVisitantes
@@ -258,6 +265,7 @@ class ReporteVisitantes(SingleTableMixin, FilterView):
 
 class ReporteFiltradoOcupacion(ReporteOcupacion):
     pass
+
 
 def menuReportes(request):
     return render(request, 'HospitalApp/menuReportes.html')
