@@ -16,6 +16,15 @@ from HospitalApp.tablas import TablaOcupacion, TablaVisitantes
 from django_tables2 import RequestConfig, SingleTableView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
+
+from HospitalApp.forms import ConsultaCamas
+from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
+from django.shortcuts import render, redirect
+from django.forms import forms
+from HospitalApp.forms import ReporteOcupacion
+from HospitalApp.tablas import TablaOcupacion
+from django_tables2 import RequestConfig
+
 from django_tables2.export.views import ExportMixin
 from django_tables2.export.export import TableExport
 from HospitalApp.filtros import FiltroPrueba1, FiltroPrueba2
@@ -77,7 +86,7 @@ class TorreView(TemplateView):
         return render(request, self.template_name,{'form': form})
     def post(self, request):
         form = Torres(request.POST)
-        text =''
+        text = ''
         if form.is_valid():
             form.save()
             text = form.cleaned_data['nombre']
@@ -126,7 +135,6 @@ class CamaView(TemplateView):
         args = {'form':form, 'text': text}
         return render(request, self.template_name, args)
 
-
 """class ConsultaCamaView(TemplateView):
     template_name = 'HospitalApp/AdministrarCamas.html'
     def get(self, request):
@@ -163,7 +171,6 @@ def ConsultaCamaView(request):
         'item': Cama.objects.all(),
         'form' : form,
         })
-
 
 def home(request):
     return render(request, 'HospitalApp/homeHospital.html')
