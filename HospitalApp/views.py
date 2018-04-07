@@ -17,7 +17,7 @@ from django_tables2 import RequestConfig, SingleTableView
 from django_filters.views import FilterView
 from django_tables2.views import SingleTableMixin
 
-from HospitalApp.forms import ConsultaCamas
+from HospitalApp.forms import ConsultaCamas,OperarioForm
 from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
 from django.shortcuts import render, redirect
 from django.forms import forms
@@ -29,6 +29,7 @@ from django_tables2.export.views import ExportMixin
 from django_tables2.export.export import TableExport
 from HospitalApp.filtros import FiltroPrueba1, FiltroVisitantes
 
+from django.contrib.auth.forms import UserCreationForm
 from datetime import datetime
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_list_or_404, get_object_or_404
@@ -163,9 +164,13 @@ def ConsultaCamaView(request):
             cd = form.cleaned_data
             print ("AQUI !!!!!  --->>>  ",cd['nombre'].idcama)
             camaReiniciar = Cama.objects.get(idcama=cd['nombre'].idcama) #id or pk or whatever you want
-            print ("AQUI !!!!!  --->>>  ",camaReiniciar)
+            asistenciaReiniciar = Asistencia.objects.filter(idcama=camaReiniciar.idcama).get(estado="E")
+            print ("AQUI !!!!!  --->>>  ",camaReiniciar, asistenciaReiniciar)
             camaReiniciar.ocupacion = 0
+            asistenciaReiniciar.estado = "S"
+            camaReiniciar.disponibilidad = camaReiniciar.iddependencia.cupo
             camaReiniciar.save()
+            asistenciaReiniciar.save()
     form = ConsultaCamas()
     return render(request, 'HospitalApp/AdministrarCamas.html', {
         'item': Cama.objects.all(),
@@ -270,3 +275,19 @@ class ReporteFiltradoOcupacion(ReporteOcupacion):
 
 def menuReportes(request):
     return render(request, 'HospitalApp/menuReportes.html')
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(username = username, password = password)
+            login(request, user)
+            return redirect('/Hospital')
+    else:
+            form = UserCreationForm()
+
+    context = {'form' : form}
+    return render(request,'HospitalApp/RegistroOpera.html', context)
