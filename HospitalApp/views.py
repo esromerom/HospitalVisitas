@@ -21,13 +21,13 @@ from HospitalApp.forms import ConsultaCamas
 from HospitalApp.models import Cama, Dependencia, Habitacion, Torre, Visitante, Asistencia
 from django.shortcuts import render, redirect
 from django.forms import forms
-from HospitalApp.forms import ReporteOcupacion
+from HospitalApp.forms import FormReporteOcupacion
 from HospitalApp.tablas import TablaOcupacion
 from django_tables2 import RequestConfig
 
 from django_tables2.export.views import ExportMixin
 from django_tables2.export.export import TableExport
-from HospitalApp.filtros import FiltroPrueba1, FiltroPrueba2
+from HospitalApp.filtros import FiltroPrueba1, FiltroVisitantes
 
 from datetime import datetime
 from django.contrib.auth import authenticate, login
@@ -36,7 +36,7 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 
 def ReportePrueba2(request):
     lista = Asistencia.objects.all()
-    filtro = FiltroPrueba2(request.GET, queryset=lista)
+    filtro = FiltroVisitantes(request.GET, queryset=lista)
     print (filtro)
     return render(request, 'HospitalApp/PruebaFiltro.html', {'filter': filtro   })
 
@@ -45,7 +45,7 @@ class ReportePrueba1(SingleTableMixin, FilterView):
     table_class = TablaVisitantes
     model = Asistencia
     template_name = "HospitalApp/PruebaFiltro.html"
-    filterset_class = FiltroPrueba2
+    filterset_class = FiltroVisitantes
 
     def get_queryset(self, **kwargs):
         return self.model.objects.all()
@@ -247,7 +247,7 @@ class ReporteVisitantes(SingleTableMixin, FilterView):
     table_class = TablaVisitantes
     model = Asistencia
     template_name = "HospitalApp/ReporteVisitantes.html"
-    filterset_class = FiltroPrueba2
+    filterset_class = FiltroVisitantes
 
     def get_queryset(self, **kwargs):
         return self.model.objects.all()
@@ -260,6 +260,7 @@ class ReporteVisitantes(SingleTableMixin, FilterView):
         RequestConfig(self.request, paginate={"per_page": 5, "page": 1}).configure(table)
         context['filter'] = filter
         context['tabla'] = table
+        # print (table.columns.visible.identificacion)
         return context
 
 

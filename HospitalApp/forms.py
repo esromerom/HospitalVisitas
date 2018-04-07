@@ -111,6 +111,7 @@ class Habitaciones(forms.ModelForm):
         fields = ('nombrehabitacion', 'piso', 'idtorre','ncamas')
 
 
+
 class Camas(forms.ModelForm):
     nombre = forms.CharField(widget=forms.TextInput(
         attrs={
@@ -133,7 +134,7 @@ class ConsultaCamas(forms.ModelForm):
         fields = ('nombre','idcama')
 
 
-class ReporteOcupacion(forms.ModelForm):
+class FormReporteOcupacion(forms.ModelForm):
     comDependencia = dependeciaChoiceField(queryset=Dependencia.objects.all())
     class Meta:
         model = Dependencia

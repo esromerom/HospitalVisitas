@@ -16,8 +16,8 @@ from django.contrib.auth.models import User
 
 
 class Asistencia(models.Model):
-    idasistencia = models.AutoField(primary_key=True)
-    identificacion = models.ForeignKey('Visitante', models.DO_NOTHING, db_column='identificacion',)
+    idasistencia = models.PositiveIntegerField(primary_key=True)
+    identificacion = models.ForeignKey('Visitante', models.CASCADE, db_column='identificacion')
     idmenor = models.IntegerField(blank=True, null=True)
     dispositivo = models.IntegerField()
     fechahorainicio = models.DateTimeField(blank=True, null=True)
@@ -25,11 +25,15 @@ class Asistencia(models.Model):
     tipo = models.CharField(max_length=5, blank=True, null=True)
     numeromenores = models.IntegerField(blank=True, null=True)
     estado = models.CharField(max_length=1, blank=True, null=True)
-    idcama = models.PositiveIntegerField(blank=True, null=True)
+    idcama = models.ForeignKey('Cama', models.DO_NOTHING, db_column='idcama')
+    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
 
     class Meta:
         managed = False
         db_table = 'asistencia'
+    def __str__(self):
+        return self.identificacion
+
 
 
 class AuthGroup(models.Model):

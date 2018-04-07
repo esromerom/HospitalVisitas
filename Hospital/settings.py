@@ -143,9 +143,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-co'
 # LANGUAGE_CODE = 'en-us'
-LANGUAGE_CODE = 'es-co'
+# LANGUAGE_CODE = 'es-co'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
@@ -162,3 +162,12 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/Hospital/Servicios'
+
+def FILTERS_VERBOSE_LOOKUPS():
+    from django_filters.conf import DEFAULTS
+    verbose_lookups = DEFAULTS['VERBOSE_LOOKUPS'].copy()
+    verbose_lookups.update({
+        'lt': 'Antes de',
+        'exact': 'Hoy'
+        })
+    return verbose_lookups

@@ -10,7 +10,7 @@ from HospitalApp.views import ReporteOcupacion
 
 from HospitalApp.tablas import TablaOcupacion
 from HospitalApp.models import Asistencia
-from HospitalApp.filtros import FiltroPrueba1,FiltroPrueba2
+from HospitalApp.filtros import FiltroPrueba1,FiltroVisitantes
 from HospitalApp.views import ConsultaCamaView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -45,7 +45,7 @@ urlpatterns = [
     # url(r'^prueba$', views.ReportePrueba1.as_view(), name="Prueba Filtro")
     url(r'^prueba$', views.ReportePrueba2, name="Prueba Filtro"),
     url(r'^search/$',
-        views.ReportePrueba1.as_view(filterset_class=FiltroPrueba2,
-                                     template_name='HospitalApp/PruebaFiltro.html',),
+        views.ReportePrueba1.as_view(filterset_class=FiltroVisitantes,
+                                     template_name='HospitalApp/PruebaFiltro.html', ),
         name='FiltroPrueba'),
 ]

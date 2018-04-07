@@ -37,20 +37,20 @@ class SummingColumn(tables.Column):
 
 class TablaVisitantes(tables.Table):
     export_formats = ['csv', 'xls']
-    identificacion = tables.Column(accessor='identificacion',
+    identificacion = tables.Column(accessor='identificacion.idvisitante',
                                    verbose_name='Documento de identidad',
-                                   default='int')
+                                   )
     nombre = tables.Column(accessor='identificacion.nombre',
                            verbose_name='Visitante')
-    dependencia = tables.Column(accessor='identificacion.iddependencia.nombres',
+    dependencia = tables.Column(accessor='idcama.iddependencia.nombres',
                                 verbose_name='Dependencia')
-    cama = tables.Column(accessor='identificacion.idcama.nombre')
+    cama = tables.Column(accessor='idcama.nombre')
     def __init__(self, *args, **kwargs):
         super(TablaVisitantes, self).__init__(*args, **kwargs)
         # self.base_columns['identificacion__idcama__nombre'].verbose_name = ' Cama '
         # self.base_columns['identificacion__iddependencia__nombres'].verbose_name = ' Dependencia '
         # self.base_columns['identificacion__nombre'].verbose_name = ' Nombre Visitante '
-        self.base_columns['identificacion'].verbose_name = ' Documento de Identidad '
+        # self.base_columns['identificacion'].verbose_name = ' Documento de Identidad '
         self.base_columns['fechahorainicio'].verbose_name = ' Fecha-Hora Entrada '
         self.base_columns['fechahorafin'].verbose_name = ' Fecha-Hora Salida '
         self.base_columns['estado'].verbose_name = ' Estado '
@@ -64,6 +64,3 @@ class TablaVisitantes(tables.Table):
                     'cama', 'estado',
                     'fechahorainicio', 'fechahorafin')
         template = 'django_tables2/bootstrap.html'
-
-    # def render_identificacion(self):
-    #     return '%d' % next(self.identificacion)
