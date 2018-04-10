@@ -224,7 +224,8 @@ class ReporteOcupacion(ExportMixin, FilterView, SingleTableView):
                                                          'identificacion__iddependencia__nombres',
                                                          'identificacion__idcama__ocupacion',
                                                          'identificacion__nombre',
-                                                         'identificacion__asistencia__numeromenores'))
+                                                         'identificacion__asistencia__numeromenores',
+                                                         'fechahorainicio'))
         config = RequestConfig(request).configure(tabla)
         export_format = request.GET.get('_export', 'CSV')
         if TableExport.is_valid_format(export_format):
@@ -257,7 +258,7 @@ class ReporteVisitantes(SingleTableMixin, FilterView):
         filter = self.filterset_class(self.request.GET, queryset=self.get_queryset(**kwargs))
         # filter.form.helper = FooFilterFormHelper()
         table = self.table_class(filter.qs)
-        RequestConfig(self.request, paginate={"per_page": 5, "page": 1}).configure(table)
+        RequestConfig(self.request, paginate={"per_page": 25, "page": 1}).configure(table)
         context['filter'] = filter
         context['tabla'] = table
         # print (table.columns.visible.identificacion)
