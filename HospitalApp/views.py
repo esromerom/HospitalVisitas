@@ -33,7 +33,7 @@ from django.contrib.auth.forms import UserCreationForm
 from datetime import datetime
 from django.contrib.auth import authenticate, login
 from django.shortcuts import get_list_or_404, get_object_or_404
-
+from HospitalApp.forms import CustomUserCreationForm
 
 def ReportePrueba2(request):
     lista = Asistencia.objects.all()
@@ -165,7 +165,6 @@ def ConsultaCamaView(request):
             print ("AQUI !!!!!  --->>>  ",cd['nombre'].idcama)
             camaReiniciar = Cama.objects.get(idcama=cd['nombre'].idcama) #id or pk or whatever you want
             asistenciaReiniciar = Asistencia.objects.filter(idcama=camaReiniciar.idcama).get(estado="E")
-            print ("AQUI !!!!!  --->>>  ",camaReiniciar, asistenciaReiniciar)
             camaReiniciar.ocupacion = 0
             asistenciaReiniciar.estado = "S"
             camaReiniciar.disponibilidad = camaReiniciar.iddependencia.cupo
@@ -278,16 +277,12 @@ def menuReportes(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
-            user = authenticate(username = username, password = password)
-            login(request, user)
-            return redirect('/Hospital')
-    else:
-            form = UserCreationForm()
+        f = CustomUserCreationForm(request.POST)
+        if f.is_valid():
+            f.save()
+            return redirect('/Hospital/Servicios/admin/registro_operario')
 
-    context = {'form' : form}
-    return render(request,'HospitalApp/RegistroOpera.html', context)
+    else:
+        f = CustomUserCreationForm()
+
+    return render(request, 'HospitalApp/RegistroOpera.html', {'form': f})

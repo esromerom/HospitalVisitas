@@ -17,9 +17,14 @@
         <div class="navbar-header">
           <a class="navbar-brand" href="#">Policlinico Olaya Herrera</a>
         </div>
+
         <ul class="nav navbar-nav">
+            {% if user.is_staff %}
             <li><a href="/Hospital/Servicios/admin/">Administracion Habitaciones</a></li>
             <li><a href="/Hospital/Servicios/Reportes/">Consultas y reportes</a></li>
+             {% else %}
+            <li><a href="/Hospital/Servicios/Reportes/">Consultas y reportes</a></li>
+            {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <li><a href="/Hospital/logout/"><span class="glyphicon glyphicon-log-in"></span> Salir</a></li>

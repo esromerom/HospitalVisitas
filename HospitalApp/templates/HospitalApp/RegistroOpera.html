@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "baseformreport.html" %}
 
 
 {% block head %}
@@ -10,14 +10,30 @@
 
 
 {% block body %}
+    {% if user.is_authenticated %}
     <div class="container">
+
         <h1>Registro de Operarios</h1>
-        <form method="post">
+        <form method="post" action = "{% url 'register' %}">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Aceptar </button>
+            {% if form.errors %}
+                <p>Hay errores en el formulario</p>
+            {% endif %}
+
+            <table>
+                {{ form.as_table }}
+            </table>
+
+
+            <input type="submit" value="Register">
+
         </form>
+
     </div>
+    {% else %}
+        <img src="{% static "HospitalApp/pare.png" %}" class="img-responsive center-block" alt="My image"/>
+        <h4 >Inicie sesión primero</h4>
+    {% endif %}
 
 {% endblock %}
 

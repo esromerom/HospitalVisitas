@@ -31,8 +31,8 @@ urlpatterns = [
     url(r'^Servicios/admin/AdministrarCama', views.ConsultaCamaView, name='administrarcama'),
     # url(r'^Servicios/admin/AdministrarCama', ConsultaCamaView.as_view(), name='administrarcama'),
     url(r'^Servicios/admin/$', views.admin, name='admin'),
-    url(r'^registro_operario/$', views.registro, name='registro'),
-    url(r'^Servicios/Reportes/Ocupacion$',ReporteOcupacion.as_view(),
+    url(r'^Servicios/admin/registro_operario/', views.register, name = 'register'),
+   url(r'^Servicios/Reportes/Ocupacion$',ReporteOcupacion.as_view(),
         name='ReporteOcupación'),
     # url(r'^Servicios/Reportes/Ocupacion$', views.ReporteFiltradoOcupacion.as_view(
     #     table_class = TablaOcupacion,

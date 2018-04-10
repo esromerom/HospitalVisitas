@@ -76,6 +76,7 @@ class AuthUser(models.Model):
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
+    passconsola = models.CharField(max_length=45)
 
     class Meta:
         managed = False
@@ -131,6 +132,7 @@ class Cama(models.Model):
         db_table = 'cama'
     def __str__(self):
         return self.nombre
+
 
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()

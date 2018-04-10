@@ -18,9 +18,15 @@
           <a class="navbar-brand" href="#">Policlinico Olaya Herrera</a>
         </div>
         <ul class="nav navbar-nav">
+            {% if user.is_staff %}
+                <li><a href="/Hospital/Servicios/admin/">Administrar habitaciones</a></li>
+                <li><a href="/Hospital/Servicios/Reportes/Ocupacion">Habitaciones ocupadas</a></li>
+                <li><a href="/Hospital/Servicios/Reportes/Visitantes">Habitaciones visitantes</a></li>
+            {% else %}
             <li><a href="/Hospital/Servicios/Reportes/Ocupacion">Habitaciones ocupadas</a></li>
             <li><a href="/Hospital/Servicios/Reportes/Visitantes">Habitaciones visitantes</a></li>
-            <li><a href="/Hospital/Servicios/admin/">Administrar habitaciones</a></li>
+            {% endif %}
+
 
          </ul>
         <ul class="nav navbar-nav navbar-right">
