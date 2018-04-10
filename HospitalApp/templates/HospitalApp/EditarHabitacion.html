@@ -1,0 +1,34 @@
+{% extends 'baseformreport.html' %}
+
+{% block body %}
+
+{% block head %}
+    <title>Reportes</title>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
+{% endblock %}
+
+ {% if user.is_authenticated %}
+     <div class = container>
+         <h1>Editar Habitación</h1>
+            <form class="form-horizontal" method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary botonform">Editar</button>
+                {% if form.errors %}
+                     {% for field in form %}
+                         {% for error in field.errors %}
+                             <div class="alert alert-danger">
+                                 <strong>{{ error|escape }}</strong>
+                             </div>
+                         {% endfor %}
+                     {% endfor %}
+                {% endif %}
+            </form>
+         <h2>{{ text }} </h2>
+     </div>
+ {% else %}
+        <img src="{% static "HospitalApp/pare.png" %}" class="img-responsive center-block" alt="My image"/>
+        <h4 >Inicie sesión primero</h4>
+ {% endif %}
+{% endblock %}

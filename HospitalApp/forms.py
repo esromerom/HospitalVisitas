@@ -8,59 +8,19 @@ from django.contrib.auth import models
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-class Dependecias(forms.ModelForm):
-    nombres = forms.CharField(widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': 'Escriba el nombre de la dependencia...'
-        }
-
-    ))
-    hora_inicio = forms.TimeField(widget=forms.TimeInput(
-        attrs={
-            'placeholder': 'Escriba la hora de inicio de visitas...',
-             'class': 'form-control',
-        }
-    ))
-    hora_fin = forms.TimeField(widget=forms.TimeInput(
-        attrs={
-            'placeholder': 'Escriba la hora de inicio de visitas..,',
-             'class': 'form-control',
-        }
-    ))
-    cupo = forms.IntegerField(widget=forms.NumberInput(
-        attrs={
-            'placeholder': 'Escriba el numero de visitantes que pueden ingresar por cama...',
-            'min': '0',
-            'class': 'form-control',
-        }
-    ))
-    menores = forms.IntegerField(widget=forms.NumberInput(
-        attrs={
-            'placeholder': 'Escriba el numero de menores que puede acompañarm a cada adulto dependencia...',
-        'min': '0',
-        'class': 'form-control',
-        }
-
-    ))
-    class Meta:
-        model = Dependencia
-        fields = ('nombres','hora_inicio','hora_fin','cupo','menores')
-
-
 class Torres(forms.ModelForm):
     nombre =  forms.CharField(widget=forms.TextInput(
         attrs={
             'class': 'form-control',
             'placeholder': 'Escriba el nombre de la torre...'
         }
-    ))
+    ),label='Nombre de Torre')
     npisos = forms.IntegerField(widget=forms.NumberInput(
         attrs={
             'class': 'form-control',
             'placeholder': 'Escriba el numero de pisos de la torre...'
         }
-    ))
+    ),label='Numero de Pisos')
     class Meta:
         model = Torre
         fields = ('nombre', 'npisos')
@@ -70,72 +30,267 @@ class nombreChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombre)
 
+
 class habitacionChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombrehabitacion)
+
 
 class camaChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombre)
 
+
 class dependeciaChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombres)
+
 
 class torreChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return (obj.nombre)
 
-class Habitaciones(forms.ModelForm):
+
+class CrearDependecias(forms.ModelForm):
+    nombres = forms.CharField(widget=forms.TextInput(
+                                attrs={
+                                    'class': 'form-control',
+                                    'placeholder': 'Escriba el nombre de la dependencia...'
+                                }
+                            ))
+    hora_inicio = forms.TimeField(widget=forms.TimeInput(
+                                        attrs={
+                                            'placeholder': 'Escriba la hora de inicio de visitas...',
+                                             'class': 'form-control',
+                                        }
+                                    ))
+    hora_fin = forms.TimeField(widget=forms.TimeInput(
+                                    attrs={
+                                        'placeholder': 'Escriba la hora de inicio de visitas..,',
+                                         'class': 'form-control',
+                                    }
+                                ))
+    cupo = forms.IntegerField(widget=forms.NumberInput(
+                                attrs={
+                                    'placeholder': 'Escriba el numero de visitantes que pueden ingresar por cama...',
+                                    'min': '0',
+                                    'class': 'form-control',
+                                }
+                            ))
+    # menores = forms.IntegerField(widget=forms.NumberInput(
+    #                                 attrs={
+    #                                     'placeholder': 'Escriba el numero de menores que puede acompañarma cada adulto dependencia...',
+    #                                 'min': '0',
+    #                                 'class': 'form-control',
+    #                                 }
+    #                             ))
+
+    # def clean_nombres(self):
+    #     nombres = self.cleaned_data['nombres'].lower()
+    #     r = User.objects.filter(nombres=nombres)
+    #     if r.count():
+    #         raise ValidationError("Esta dependencia ya existe.")
+    #     return nombres
+
+    class Meta:
+        model = Dependencia
+        fields = ('nombres',
+                  'hora_inicio',
+                  'hora_fin',
+                  'cupo',
+                  # 'menores',
+                  )
+
+
+class EditarDependencias(forms.Form):
+    iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all(), label='Área')
+    nombres = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control',
+                                                            'placeholder': 'Escriba el nuevo de la dependencia...'
+                                                            }))
+
+    class Meta:
+        model = Dependencia
+        fields = ('iddependencia',
+                  'nombres',)
+        sequence = ('iddependencia',
+                  'nombres',)
+
+    def clean_nombres(self):  # Revision no exista esa habitacion
+        nombres = self.cleaned_data['nombres']
+
+        try:
+            dep = Dependencia.objects.get(nombres__iexact=nombres)
+
+        except:
+            return nombres
+        raise forms.ValidationError(("Esa área ya existe."))
+
+
+class ConsultaDependencias(forms.Form):
+    iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all(), label='Área a editar')
+    class Meta:
+        model = Dependencia
+        fields = ('iddependencia',)
+
+
+class CrearHabitaciones(forms.ModelForm):
     nombrehabitacion = forms.CharField(widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': 'Escriba el nombre de la habitacion...'
-        }
-    ))
-
+                                attrs={
+                                    'class': 'form-control',
+                                    'placeholder': 'Escriba el nombre de la habitacion...'
+                                }
+                        ),label='Nombre de habitación')
     piso = forms.CharField(widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': 'Escriba el piso en el cual está ubicada la habitacion...'
-        }
-    ))
+                                attrs={
+                                    'class': 'form-control',
+                                    'placeholder': 'Escriba el piso en el cual está ubicada la habitacion...'
+                                }
+                            ),label= 'Piso')
 
-    idtorre = nombreChoiceField(queryset=Torre.objects.all())
-
+    idtorre = nombreChoiceField(queryset=Torre.objects.all(),label='Torre')
+    iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all(),label='Área')
     ncamas = forms.IntegerField(widget=forms.NumberInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': 'Escriba el numero de camas...'
-        }
-    ))
+                                    attrs={
+                                        'class': 'form-control',
+                                        'placeholder': 'Escriba el numero de camas...'
+                                    }
+                                ),label='Número de camas')
 
     class Meta:
         model = Habitacion
-        fields = ('nombrehabitacion', 'piso', 'idtorre','ncamas')
+        fields = ('nombrehabitacion', 'piso', 'idtorre','iddependencia','ncamas',)
+
+    def clean_nombrehabitacion(self): #Revision no exista esa habitacion
+        nombrehabitacion = self.cleaned_data['nombrehabitacion']
+
+        try:
+            hab = Habitacion.objects.get(nombrehabitacion__iexact=nombrehabitacion)
+
+        except:
+            return nombrehabitacion
+        raise forms.ValidationError(("Ese nombre de cama ya existe."))
 
 
+class EditarHabitaciones(forms.Form):
+    idhabitacion = habitacionChoiceField(queryset=Habitacion.objects.all(), label='Habitación a editar')
+    nombrehabitacion = forms.CharField(widget=forms.TextInput(
+                                attrs={
+                                    'class': 'form-control',
+                                    'placeholder': 'Escriba el nombre de la habitacion...'
+                                }
+                        ),label='Nuevo Nombre de habitación')
+    piso = forms.CharField(widget=forms.TextInput(
+                                attrs={
+                                    'class': 'form-control',
+                                    'placeholder': 'Escriba el piso en el cual está ubicada la habitacion...'
+                                }
+                            ),label= 'Piso')
 
-class Camas(forms.ModelForm):
+    idtorre = nombreChoiceField(queryset=Torre.objects.all(),label='Torre')
+    iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all(),label='Área')
+    ncamas = forms.IntegerField(widget=forms.NumberInput(
+                                    attrs={
+                                        'class': 'form-control',
+                                        'placeholder': 'Escriba el numero de camas...'
+                                    }
+                                ),label='Número de camas')
+
+    class Meta:
+        model = Habitacion
+        fields = ('idhabitacion','nombrehabitacion', 'piso', 'idtorre','ncamas','iddependencia',    )
+        sequence = ('idhabitacion','nombrehabitacion', 'piso', 'idtorre','iddependencia','ncamas',)
+
+    def clean_nombrehabitacion(self): #Revision no exista esa habitacion
+        nombrehabitacion = self.cleaned_data['nombrehabitacion']
+        idhabitacion = self.cleaned_data['idhabitacion']
+        print (idhabitacion.nombrehabitacion)
+        try:
+            hab = Habitacion.objects.get(nombrehabitacion__iexact=nombrehabitacion)
+            if nombrehabitacion != idhabitacion.nombrehabitacion:
+                return nombrehabitacion
+            raise forms.ValidationError(("Esa habitación ya existe."))
+        except:
+            return nombrehabitacion
+
+
+class ConsultaHabitacion(forms.Form):
+    idhabitacion = habitacionChoiceField(queryset=Habitacion.objects.all().order_by('nombrehabitacion'),
+                                         label='Habitación a editar')
+    class Meta:
+        model = Habitacion
+        fields = ('idhabitacion',)
+
+
+class CrearCamas(forms.Form):
+    idhabitacion = habitacionChoiceField(queryset=Habitacion.objects.all().order_by('nombrehabitacion'),
+                                         label='Habitación')
     nombre = forms.CharField(widget=forms.TextInput(
-        attrs={
-            'class': 'form-control',
-            'placeholder': 'Escriba el nombre de la cama...'
-        }
-    ))
-    idhabitacion = habitacionChoiceField(queryset=Habitacion.objects.all())
-    iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all())
-    disponibilidad = Dependencia.objects.all()
+                            attrs={'class': 'form-control',
+                                   'placeholder': 'Escriba el nombre de la cama...'}))
+    disponibilidad = forms.IntegerField(widget=forms.NumberInput(
+                                    attrs={'class': 'form-control',
+                                           'placeholder': 'Escriba el cupo máximo aquí ...'}),label="Cupo")
+    # iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all().order_by('nombres'),
+    #                                      label='Dependencia', initial=8)
+
     class Meta:
         model = Cama
-        fields = ('nombre', 'idhabitacion', 'iddependencia', )
+        fields = ('idhabitacion', 'disponibilidad', 'nombre',)
+        sequence = ('idhabitacion', 'nombre', 'disponibilidad',)
+
+    def clean_nombre(self): #Revision no exista esa habitacion
+        nombre = self.cleaned_data['nombre']
+
+        try:
+            hab = Cama.objects.get(nombre__iexact=nombre)
+        except:
+            nomHab = self.cleaned_data['idhabitacion'].nombrehabitacion
+            return nombre
+        raise forms.ValidationError(("Ese nombre de cama ya existe."))
 
 
-class ConsultaCamas(forms.ModelForm):
+class EditarCamas(forms.Form):
+    idcama = camaChoiceField(queryset=Cama.objects.all().order_by('nombre'),
+                             label='Cama a editar')
+    nombre = forms.CharField(widget=forms.TextInput(
+                            attrs={'class': 'form-control',
+                                   'placeholder': 'Escriba el nuevo nombre o reescriba el actual ...'}),label= "Nuevo Nombre")
+
+    # idhabitacionnueva = habitacionChoiceField(queryset=Habitacion.objects.all().order_by('nombrehabitacion'),
+    #                                      label='Habitación')
+    disponibilidad = forms.IntegerField(widget=forms.NumberInput(
+                                    attrs={'class': 'form-control',
+                                           'placeholder': 'Escriba el cupo máximo aquí ...'}),label="Cupo")
+    # ocupacion = forms.IntegerField(widget=forms.NumberInput(
+    #     attrs={'class': 'form-control',
+    #            'placeholder': 'Escriba el cupo máximo aquí ...'}), label="Ocupación")
+
+    # iddependencia = dependeciaChoiceField(queryset=Dependencia.objects.all().order_by('nombres'),
+    #                                      label='Dependencia', initial=8)
+
+    class Meta:
+        model = Cama
+        fields = ('idcama', 'nombre',  'disponibilidad',)
+        sequence = ['idcama', 'nombre', 'disponibilidad',]
+
+    def clean_nombre(self): #Revision no exista esa habitacion
+        nombre = self.cleaned_data['nombre']
+        idcama = self.cleaned_data['idcama']
+        try:
+            hab = Cama.objects.get(nombre__iexact=nombre)
+            if nombre != idcama.nombre:
+                return nombre
+            raise forms.ValidationError(("Ese nombre de cama ya existe."))
+        except:
+            return nombre
+
+
+
+class ConsultaCamas(forms.Form):
     nombre = camaChoiceField(queryset=Cama.objects.filter(ocupacion__gt=0))
     class Meta:
         model = Cama
-        fields = ('nombre','idcama')
+        fields = ('nombre',)
 
 
 class FormReporteOcupacion(forms.ModelForm):
@@ -143,6 +298,8 @@ class FormReporteOcupacion(forms.ModelForm):
     class Meta:
         model = Dependencia
         fields = ('nombres',)
+
+
 class OperarioForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
@@ -166,7 +323,8 @@ class OperarioForm(UserCreationForm):
 
         return user
 
-class CustomUserCreationForm(forms.Form):
+
+class CreacionUsuario(forms.Form):
     permisos = (('operario', 'Operario'),
                 ('administrativo','Administrativo'))
     username = forms.CharField(label='Nombre de usuario', min_length=4, max_length=150)
@@ -176,7 +334,7 @@ class CustomUserCreationForm(forms.Form):
     email = forms.EmailField(label='Email')
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
-    passconsola = forms.CharField(label='Contraseña consola', max_length=25)
+
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()
@@ -209,6 +367,5 @@ class CustomUserCreationForm(forms.Form):
                                         )
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        user.passconsola = self.cleaned_data['passconsola']
         user.save()
         return user

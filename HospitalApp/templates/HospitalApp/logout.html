@@ -6,14 +6,20 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <div class="col-4">
-            <h2>Sesión cerrada éxitosamente</h2>
+    <div class="container-fluid text-center" style= "margin-top: 40">
+        
+
+            <h2>Sesión cerrada exitosamente</h2>
             <form action="/Hospital/login/">
                 <button type="submit" class="btn btn-primary" onlick="#">Iniciar sesión</button>
 
             </form>
-
-        </div>
+         
     </div>
+<script>
+function redirect(){
+     window.location.href = "/Hospital/";
+}
+setTimeout(redirect, 2000);
+</script>
 {% endblock %}

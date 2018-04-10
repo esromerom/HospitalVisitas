@@ -1,0 +1,26 @@
+{% extends "baseformreport.html" %}
+{% block head %}
+    <title>Dependencias</title>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'HospitalApp/style.css' %}" type ="text/css">
+{% endblock %}
+
+{% block body %}
+    {% if user.is_authenticated %}
+        <div class = container>
+            <h2>Administrar Habitaciones</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <a href="{% url 'crearhabitacion' %}" class="btn btn-success btn-md " role="button" aria-pressed="true">
+                     Crear</a>
+                <a href="{% url 'editarhabitacion' %}" class="btn btn-primary btn-md " role="button" aria-pressed="true">
+                     Editar</a>
+            </form>
+            <h2>{{ text }} </h2>
+        </div>
+    {% else %}
+        <img src="{% static "HospitalApp/pare.png" %}" class="img-responsive center-block" alt="My image"/>
+        <h4 >Inicie sesión primero</h4>
+    {% endif %}
+{% endblock %}

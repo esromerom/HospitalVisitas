@@ -1,23 +1,16 @@
-"""A model is the single, definitive source of information
-about your data. It contains the essential fields and behaviors
-of the data you’re storing. Generally, each model maps to a single
-database table.
-
-The basics:
-
-- Each model is a Python class that subclasses django.db.models.Model.
-- Each attribute of the model represents a database field.
-- With all of this, Django gives you an automatically-generated
-database-access API; see Making queries."""
-
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.contrib.auth.models import User
-# Esa clas User es la que conecta a la tabla de auth_user
 
 
 class Asistencia(models.Model):
-    idasistencia = models.PositiveIntegerField(primary_key=True)
-    identificacion = models.ForeignKey('Visitante', models.CASCADE, db_column='identificacion')
+    idasistencia = models.AutoField(primary_key=True)
+    identificacion = models.ForeignKey('Visitante', models.DO_NOTHING, db_column='identificacion')
     idmenor = models.IntegerField(blank=True, null=True)
     dispositivo = models.IntegerField()
     fechahorainicio = models.DateTimeField(blank=True, null=True)
@@ -26,14 +19,11 @@ class Asistencia(models.Model):
     numeromenores = models.IntegerField(blank=True, null=True)
     estado = models.CharField(max_length=1, blank=True, null=True)
     idcama = models.ForeignKey('Cama', models.DO_NOTHING, db_column='idcama')
-    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
+    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia', blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'asistencia'
-    def __str__(self):
-        return self.identificacion
-
 
 
 class AuthGroup(models.Model):
@@ -76,7 +66,6 @@ class AuthUser(models.Model):
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
-    passconsola = models.CharField(max_length=45)
 
     class Meta:
         managed = False
@@ -103,9 +92,25 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
+class Cama(models.Model):
+    idcama = models.AutoField(primary_key=True)
+    nombre = models.CharField(unique=True, max_length=45)
+    idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
+    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia',null=True,blank=True)
+    ocupacion = models.PositiveIntegerField(blank=True, null=True)
+    disponibilidad = models.PositiveIntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'cama'
+
+    def __str__(self):
+        return self.nombre
+
+
 class Dependencia(models.Model):
     iddependencia = models.AutoField(primary_key=True)
-    nombres = models.CharField(max_length=45)
+    nombres = models.CharField(unique=True, max_length=45)
     hora_inicio = models.TimeField(blank=True, null=True)
     hora_fin = models.TimeField(blank=True, null=True)
     cupo = models.PositiveIntegerField(blank=True, null=True)
@@ -118,21 +123,8 @@ class Dependencia(models.Model):
     def __str__(self):
         return self.nombres
 
-
-class Cama(models.Model):
-    idcama = models.AutoField(primary_key=True)
-    nombre = models.CharField(verbose_name='Nombre Cama',max_length=45)
-    idhabitacion = models.ForeignKey('Habitacion', models.DO_NOTHING, db_column='idhabitacion')
-    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
-    ocupacion = models.PositiveIntegerField(verbose_name='Ocupación')
-    disponibilidad = models.PositiveIntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'cama'
-    def __str__(self):
-        return self.nombre
-
+    # def get_absolute_url(self):
+    #     return reversed("formulariodependencia", kwargs={"iddependencia": self.iddependencia})
 
 class DjangoAdminLog(models.Model):
     action_time = models.DateTimeField()
@@ -178,13 +170,24 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+
+class Fotos(models.Model):
+    idfoto = models.AutoField(primary_key=True)
+    identificacion = models.ForeignKey('Visitante', models.DO_NOTHING, db_column='identificacion')
+    foto = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'fotos'
+
+
 class Habitacion(models.Model):
     idhabitacion = models.AutoField(primary_key=True)
     nombrehabitacion = models.CharField(max_length=45)
     piso = models.CharField(max_length=45)
     idtorre = models.ForeignKey('Torre', models.DO_NOTHING, db_column='idtorre')
     ncamas = models.PositiveIntegerField()
-
+    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia', blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'habitacion'
@@ -224,6 +227,15 @@ class Perfiloperario(models.Model):
         db_table = 'perfiloperario'
 
 
+class Permisos(models.Model):
+    nombre = models.CharField(max_length=45)
+    idpermiso = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'permisos'
+
+
 class Torre(models.Model):
     idtorre = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=45)
@@ -234,17 +246,17 @@ class Torre(models.Model):
         db_table = 'torre'
 
 
+
 class Visitante(models.Model):
     idvisitante = models.IntegerField(primary_key=True)
-    nombre = models.CharField(verbose_name='Visitante',max_length=45)
-    idcama = models.ForeignKey(Cama, models.DO_NOTHING, db_column='idcama')
-    iddependencia = models.ForeignKey(Dependencia, models.DO_NOTHING, db_column='iddependencia')
+    nombre = models.CharField(max_length=45)
+    idcama = models.PositiveIntegerField()
+    iddependencia = models.ForeignKey('Dependencia', models.DO_NOTHING, db_column='iddependencia')
     nummenores = models.PositiveIntegerField(db_column='NumMenores', blank=True, null=True)  # Field name made lowercase.
-    foto = models.TextField(blank=True, null=True)
+    visitas = models.IntegerField(blank=True, null=True)
+    nvisitas = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'visitante'
-
-
 

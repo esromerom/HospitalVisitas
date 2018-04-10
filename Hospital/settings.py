@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+import django.core.cache.backends.memcached
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,12 +27,21 @@ DEBUG = True
 
 # Esto es lo que permite quepuedan verme fuera de el localhost
 ALLOWED_HOSTS = ['*']
+#ALLOWED_HOSTS = ['10.10.15.118']
 
 LANGUAGE_CODE = 'es'
 
 
 
-
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.BCryptPasswordHasher',
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2PasswordHasher',
+    'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
+    'django.contrib.auth.hashers.SHA1PasswordHasher',
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+    'django.contrib.auth.hashers.CryptPasswordHasher',
+)
 # Definimos la ruta de los archivos de idiomas
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
@@ -51,7 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_tables2',
     'django_filters',
-    'django_bootstrap3_daterangepicker'
+    'django_bootstrap3_daterangepicker',
 ]
 
 MIDDLEWARE = [
@@ -84,36 +93,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Hospital.wsgi.application'
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    },
+    'select2': {
+        "BACKEND": "django.core.cache.backends.memcached.MemcachedCache",
+        "LOCATION": "redis://127.0.0.1:6379/2",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
 
-# Database
-# https://docs.djangoproject.com/en/2.0/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-# local mysql
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'hospital',
-#         'USER': 'root',
-#         'PASSWORD': 'Acceso2018',
-#     }
-# }
-
-# Remote 192.168.0.10 mysqlserver
+        },
+        'TIMEOUT':60*60*24
+    }
+}
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'hospital',
-        'USER': 'hospital',
+        'USER': 'admin',
         'PASSWORD': 'Acceso2018*',
+        # 'HOST': '10.10.15.34',
         'HOST': '192.168.0.200',
+        # 'HOST': 'localhost',
         'PORT': '3306',
     }
 }
@@ -143,10 +150,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es-co'
 # LANGUAGE_CODE = 'en-us'
-# LANGUAGE_CODE = 'es-co'
 
-TIME_ZONE = 'America/Bogota'
 
+#TIME_ZONE = 'America/Bogota'
+TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_L10N = True
@@ -158,10 +165,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/Hospital/Servicios'
+
+#CSRF_COOKIE_SECURE = True
+
+#SESSION_COOKIE_SECURE = True
 
 def FILTERS_VERBOSE_LOOKUPS():
     from django_filters.conf import DEFAULTS

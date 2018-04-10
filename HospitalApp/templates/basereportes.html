@@ -20,11 +20,11 @@
         <ul class="nav navbar-nav">
             {% if user.is_staff %}
                 <li><a href="/Hospital/Servicios/admin/">Administrar habitaciones</a></li>
-                <li><a href="/Hospital/Servicios/Reportes/Ocupacion">Habitaciones ocupadas</a></li>
-                <li><a href="/Hospital/Servicios/Reportes/Visitantes">Habitaciones visitantes</a></li>
+                <li><a href="/Hospital/Servicios/Reportes/Ocupacion/">Visitantes Adentro</a></li>
+                <li><a href="/Hospital/Servicios/Reportes/Visitantes/">Busqueda Visitantes</a></li>
             {% else %}
-            <li><a href="/Hospital/Servicios/Reportes/Ocupacion">Habitaciones ocupadas</a></li>
-            <li><a href="/Hospital/Servicios/Reportes/Visitantes">Habitaciones visitantes</a></li>
+                <li><a href="/Hospital/Servicios/Reportes/Ocupacion/">Visitantes Adentro</a></li>
+                <li><a href="/Hospital/Servicios/Reportes/Visitantes/">Búsqueda Visitantes</a></li>
             {% endif %}
 
 
