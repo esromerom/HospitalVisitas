@@ -163,6 +163,10 @@ MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = '/Hospital/Servicios'
 
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
+
 def FILTERS_VERBOSE_LOOKUPS():
     from django_filters.conf import DEFAULTS
     verbose_lookups = DEFAULTS['VERBOSE_LOOKUPS'].copy()

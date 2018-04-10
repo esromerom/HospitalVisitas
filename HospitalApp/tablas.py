@@ -16,13 +16,15 @@ class TablaOcupacion(tables.Table):
         self.base_columns['identificacion__idcama__ocupacion'].verbose_name = 'Ocupación'
         self.base_columns['identificacion__nombre'].verbose_name = 'Visitante'
         self.base_columns['identificacion__asistencia__numeromenores'].verbose_name = 'N. Menores'
+        self.base_columns['fechahorainicio'].verbose_name = 'Fecha de ingreso'
 
     class Meta:
         fields = ['identificacion__idcama__nombre',
                   'identificacion__iddependencia__nombres',
                   'identificacion__idcama__ocupacion',
                   'identificacion__nombre',
-                  'identificacion__asistencia__numeromenores']
+                  'identificacion__asistencia__numeromenores',
+                  'fechahorainicio']
         model = Asistencia
         # sequence = ['nomCama','nomDependencia',
         #             'ocupacion', 'identificacion__nombre',
