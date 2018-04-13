@@ -18,8 +18,8 @@
                 <div class="table-responsive">
                     {% load django_tables2 %}
                     {% load bootstrap3 %}
-                                        {% bootstrap_css %}
-                    {#                    {% bootstrap_javascript %}#}
+                    {% bootstrap_css %}
+                    {% bootstrap_javascript %}
                     {#                    {% bootstrap_messages %}#}
                     {#                    <form method="get">#}
                     {#                        {{ filter.form.as_p }}#}
@@ -29,13 +29,14 @@
                         <form action="" method="get" class="form">
                             <div class="card bg-faded" align="content-center"><div class="card-block">
                                 <h4 style="margin-top: 10" align="text-left">Búsqueda</h4>
-                                <div class="row" style="margin-left: 20">
-                                    <div class="form-group col-sm-4 col-md-4 col-lg-4">
-                                        {% bootstrap_field filter.form.dependencia size="small" class="form-control"%}
-                                    </div>
-                                    <div class="form-group col-sm-4 col-md-4 col-lg-4">
-                                        {% bootstrap_field filter.form.idcama size="small" class="form-control" %}
-                                    </div>
+                                <div class="container">
+                                    <div class="row" style="margin-left: 20">
+                                        <div class="form-group col-sm-4 col-md-4 col-lg-4">
+                                            {% bootstrap_field filter.form.dependencia size="small" class="form-control"%}
+                                        </div>
+                                        <div class="form-group col-sm-4 col-md-4 col-lg-4">
+                                            {% bootstrap_field filter.form.idcama size="small" class="form-control" %}
+                                        </div>
                                 </div>
                                 <div class="row" style="margin-left: 20">
                                     <div class="form-group col-sm-4 col-md-4 col-lg-4">
@@ -46,32 +47,36 @@
                                     </div>
 
                                 </div>
-                                <div class="row" style="margin-left: 5">
-                                    <div class="col-5">
-                                        <div class="form-group col-sm-10 col-md-10 col-lg-10">
+                                <div class="row" style="margin-left: 20">
+
+                                        <div class="form-group col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                             {% bootstrap_field filter.form.fechahorainicio  class="form-control" %}
                                         </div>
-                                        <div class="form-group col-sm-10 col-md-10 col-lg-10">
-                                            {% bootstrap_field filter.form.fechahorafin  class="form-control"%}
-                                        </div>
-                                        <div class="row"></div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="submit-col" >
-                                            {% buttons %}
+                                        <div class="submit-col col-sm-4 col-md-4 col-lg-4 col-xl-4" >
+                                         {% buttons %}
                                                 <button class="btn btn-outline-primary btn-lg" type=submit style="margin-top: 20"  >
-                                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Actualizar
+                                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Filtrar
                                                 </button>
                                             {% endbuttons %}
+                                        </div>
 
+
+                                </div>
+                                <div class="row" style="margin-left: 20">
+                                        <div class="form-group col-sm-4 col-md-4 col-lg-4 col-xl-4 ">
+                                            {% bootstrap_field filter.form.fechahorafin  class="form-control"%}
+                                        </div>
+                                        <div class="submit-col" >
 
                                             <a href="./Visitantes" class="btn btn-outline-secondary btn-lg " role="button" aria-pressed="true" style="margin: 20px 1px 1px 15px"," >
                                                  <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>  Borrar
                                             </a>
 
+
                                         </div>
                                     </div>
                                 </div>
+
 
                                 {#                            {% bootstrap_form filter.form layout='horizontal' %}#}
                                 {#                                {% bootstrap_button 'Filtrar' %}#}

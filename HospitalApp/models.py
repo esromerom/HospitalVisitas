@@ -12,6 +12,8 @@ database-access API; see Making queries."""
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Esa clas User es la que conecta a la tabla de auth_user
 
 
@@ -76,8 +78,6 @@ class AuthUser(models.Model):
     is_staff = models.IntegerField()
     is_active = models.IntegerField()
     date_joined = models.DateTimeField()
-    passconsola = models.CharField(max_length=45)
-
     class Meta:
         managed = False
         db_table = 'auth_user'

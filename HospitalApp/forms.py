@@ -176,7 +176,6 @@ class CustomUserCreationForm(forms.Form):
     email = forms.EmailField(label='Email')
     password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
-    passconsola = forms.CharField(label='Contraseña consola', max_length=25)
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()
@@ -209,6 +208,5 @@ class CustomUserCreationForm(forms.Form):
                                         )
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
-        user.passconsola = self.cleaned_data['passconsola']
         user.save()
         return user
